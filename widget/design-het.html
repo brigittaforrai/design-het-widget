@@ -1,0 +1,47 @@
+<template id="design-het-widget">
+  <link rel="stylesheet" type="text/css" href="widget/styles.css">
+
+  <div class="widget-container">
+    widget
+  </div>
+
+</template>
+
+
+<script>
+  (function (window, document) {
+    let thisDoc = (document._currentScript || document.currentScript).ownerDocument;
+    let template = thisDoc.querySelector('template').content;
+    if (window.ShadowDOMPolyfill) {
+      WebComponents.ShadowCSS.shimStyling(template, 'heat-map');
+    }
+
+    class DesignHet extends HTMLElement {
+      constructor() {
+        super()
+        this.widget = null
+        this._shadowRoot = null
+      }
+
+      connectedCallback () {
+        this._shadowRoot = this.attachShadow({ mode: 'open' });
+        let clone = document.importNode(template, true);
+        this._shadowRoot.appendChild(clone);
+        this.widget = this._shadowRoot.querySelector('.widget-container');
+
+        console.log(this._shadowRoot, this.widget, clone);
+        // this.render();
+      }
+
+      disconnectedCallback () {
+
+      }
+
+      attributeChangedCallback (attrName, oldval, newVal) {
+
+      }
+    }
+
+    window.customElements.define('design-het', DesignHet);
+  })(window, document)
+</script>
