@@ -6,7 +6,7 @@
 
 </template>
 
-<script src="p5/p5.min.js"></script>
+<script src="p5/p5.js"></script>
 
 <script>
   (function (window, document) {
@@ -29,8 +29,14 @@
 
         this.theta = 0.00
         this.dx = null
-        this.xgap = 10
-        this.ygap = 10
+        this.xgap = 40
+        this.ygap = 40
+        this.xNodes = 160
+        this.yNodes = 90
+        this.nodeSize = 5
+        this.length = 3
+        this.tempo = 0.1
+        this.waveHeight = 10
       }
 
       connectedCallback () {
@@ -44,11 +50,17 @@
             p.noCanvas()
             this.width = parseInt(window.getComputedStyle(this.widget).width.split('px')[0])
             this.height = parseInt(window.getComputedStyle(this.widget).height.split('px')[0])
+
+            this.xNodes = parseInt(this.width / this.xgap)
+            this.yNodes = parseInt(this.height / this.ygap)
+
             this.canvas = p.createCanvas(this.width, this.height, p.WEBGL)
 
-            this.dx = (p.TWO_PI / 100) * 10
+            this.dx = (p.TWO_PI / 100) * this.length
             this.cam = p.createCamera()
             p.ortho()
+            // p.ortho(-this.width/2, this.width/2, this.height/2, -this.height/2, -500, 500);
+            // p.noLoop()
           }
           p.draw = () => {
             this.draw()
@@ -63,30 +75,31 @@
       draw() {
         this.p5.background(0);
         this.p5.orbitControl()
-        this.theta += 0.3
+        this.theta += this.tempo
         let position = this.grid()
         this.object(position)
       }
 
       grid () {
         this.p5.noStroke()
-        this.p5.fill(250)
+        this.p5.fill(250, 10, 100)
 
-        this.p5.translate(-300, -300, 0)
+        this.p5.translate(-this.width/2, -this.height / 2, 0)
         let objpos = 0
         let a = this.theta
 
-        for(let x = 0; x< 40; x++) {
-          for(let z = 0; z<40; z++) {
+        for(let x = 0; x< this.xNodes; x++) {
+          for(let z = 0; z<this.yNodes; z++) {
             this.p5.push()
+            // this.p5.rotateX(this.p5.HALF_PI)
             this.p5.rotateY(this.p5.HALF_PI)
-            //this.p5.rotateX(this.p5.HALF_PI)
             this.p5.rotateZ(this.p5.HALF_PI)
-            let xp = x * this.xgap
-            let yp = this.p5.sin(a) * 10
-            let zp = z * this.ygap
+            let xp = (x * this.xgap)
+            let yp = this.p5.sin(a) * this.waveHeight
+            let zp = (z * this.ygap)
+
             this.p5.translate(xp, yp, zp)
-            this.p5.sphere(1)
+            this.p5.sphere(this.nodeSize)
             this.p5.pop()
             if(xp === 250 && zp === 250) {
               objpos = yp
@@ -94,6 +107,7 @@
             a += this.dx
           }
         }
+
         return objpos
       }
 
