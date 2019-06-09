@@ -2,11 +2,11 @@
   <link rel="stylesheet" type="text/css" href="widget/styles.css">
 
   <div class="widget-container">
-    widget
   </div>
 
 </template>
 
+<script src="p5/p5.min.js"></script>
 
 <script>
   (function (window, document) {
@@ -21,6 +21,16 @@
         super()
         this.widget = null
         this._shadowRoot = null
+        this.p5 = null
+
+        this.width = 0
+        this.height = 0
+        this.cam = null
+
+        this.theta = 0.00
+        this.dx = null
+        this.xgap = 10
+        this.ygap = 10
       }
 
       connectedCallback () {
@@ -29,17 +39,77 @@
         this._shadowRoot.appendChild(clone);
         this.widget = this._shadowRoot.querySelector('.widget-container');
 
-        console.log(this._shadowRoot, this.widget, clone);
-        // this.render();
+        this.p5 = new p5 ((p) => {
+          p.setup = () => {
+            p.noCanvas()
+            this.width = parseInt(window.getComputedStyle(this.widget).width.split('px')[0])
+            this.height = parseInt(window.getComputedStyle(this.widget).height.split('px')[0])
+            this.canvas = p.createCanvas(this.width, this.height, p.WEBGL)
+
+            this.dx = (p.TWO_PI / 100) * 10
+            this.cam = p.createCamera()
+            p.ortho()
+          }
+          p.draw = () => {
+            this.draw()
+          }
+        }, this.widget)
+
+        p5.canvas = this.canvas
+
+        this.addEvents()
       }
 
-      disconnectedCallback () {
-
+      draw() {
+        this.p5.background(0);
+        this.p5.orbitControl()
+        this.theta += 0.3
+        let position = this.grid()
+        this.object(position)
       }
 
-      attributeChangedCallback (attrName, oldval, newVal) {
+      grid () {
+        this.p5.noStroke()
+        this.p5.fill(250)
 
+        this.p5.translate(-300, -300, 0)
+        let objpos = 0
+        let a = this.theta
+
+        for(let x = 0; x< 40; x++) {
+          for(let z = 0; z<40; z++) {
+            this.p5.push()
+            this.p5.rotateY(this.p5.HALF_PI)
+            //this.p5.rotateX(this.p5.HALF_PI)
+            this.p5.rotateZ(this.p5.HALF_PI)
+            let xp = x * this.xgap
+            let yp = this.p5.sin(a) * 10
+            let zp = z * this.ygap
+            this.p5.translate(xp, yp, zp)
+            this.p5.sphere(1)
+            this.p5.pop()
+            if(xp === 250 && zp === 250) {
+              objpos = yp
+            }
+            a += this.dx
+          }
+        }
+        return objpos
       }
+
+      object (pos) {
+        this.p5.fill(200,0,0)
+        this.p5.push()
+        this.p5.translate(250, 250, pos + 10)
+        this.p5.rotateZ(this.p5.PI)
+        this.p5.cylinder(10, 60);
+        this.p5.pop()
+      }
+
+      addEvents () {}
+
+      disconnectedCallback () {}
+      attributeChangedCallback (attrName, oldval, newVal) {}
     }
 
     window.customElements.define('design-het', DesignHet);
