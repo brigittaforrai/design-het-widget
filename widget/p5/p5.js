@@ -49817,7 +49817,6 @@ var p5 = function(sketch, node, sync) {
     // unhide any hidden canvases that were created
     var canvases = document.getElementsByTagName('canvas');
     for (var i = 0; i < canvases.length; i++) {
-      console.log('brigi');
       var k = canvases[i];
       if (k.dataset.hidden === 'true') {
         k.style.visibility = '';
