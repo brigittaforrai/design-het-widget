@@ -11,8 +11,17 @@
       canvas {
       visibility: visible !important;
       }
+      audio {
+        display: none;
+      }
     </style>
-    <div class="widget-container"></div>
+    <div class="widget-container">
+      <audio id="audio" controls autoplay loop>
+        <source src="widget/music.mp3" type="audio/mpeg">
+        <p>Your browser doesn't support HTML5 audio. Here is
+      </audio>
+
+    </div>
   `
 
   class DesignHet extends HTMLElement {
@@ -29,6 +38,14 @@
 
     connectedCallback () {
       this.createSketch()
+
+      const musicPlay = () => {
+          this.shadowRoot.getElementById('audio').play()
+          document.removeEventListener('click', musicPlay)
+          document.removeEventListener('scroll', musicPlay)
+      }
+      document.addEventListener('click', musicPlay)
+      document.addEventListener('scroll', musicPlay)
     }
 
     createSketch () {
