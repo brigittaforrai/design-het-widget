@@ -10,17 +10,19 @@
       }
       canvas {
       visibility: visible !important;
+      z-index: -1000;
       }
       audio {
         display: none;
       }
     </style>
     <div class="widget-container">
+
       <audio id="audio" controls autoplay loop>
         <source src="widget/music.mp3" type="audio/mpeg">
         <p>Your browser doesn't support HTML5 audio. Here is
       </audio>
-
+      
     </div>
   `
 
@@ -69,7 +71,12 @@
     }
 
     disconnectedCallback () {}
-    attributeChangedCallback (attrName, oldval, newVal) {}
+    static get observedAttributes() {
+      return ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period'];
+    }
+    attributeChangedCallback (attrName, oldval, newVal) {
+      this.sketch.update(attrName, newVal)
+    }
   }
   window.customElements.define('design-het', DesignHet);
 })()
@@ -87,11 +94,17 @@ class Sketch {
     this.xgap = 50
     this.zgap = 50
     this.theta = 0.00
-    this.nodeSize = 6
+    this.nodesize = 6
     this.spacing = 3
     this.tempo = 0.05
     this.ampl = 20
     this.period = 500
+  }
+
+  update (name, val) {
+    if (this[name] !== val) {
+      this[name] = parseFloat(val)
+    }
   }
 
   setup (p) {
@@ -136,7 +149,7 @@ class Sketch {
         let zp = (z * this.zgap)
 
         p.translate(xp, yp, zp)
-        p.sphere(this.nodeSize)
+        p.sphere(this.nodesize)
         p.pop()
         if(xp === 250 && zp === 250) {
           objpos = yp

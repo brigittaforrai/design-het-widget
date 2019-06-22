@@ -16,10 +16,53 @@
     <script src="widget/design-het.js"></script>
 
     <link rel="stylesheet" type="text/css" href="main.css">
+    <link rel="stylesheet" type="text/css" href="interface.css">
   </head>
   <body>
+    <div class="interface">
+        <div>
+          <label for="xgap">x gap</label>
+          <input type="number" name="xgap" value="50"></input>
+        </div>
+
+        <div>
+          <label for="zgap">z gap</label>
+          <input type="number" name="zgap" value="50"></input>
+        </div>
+
+        <div>
+          <label for="theta">theta</label>
+          <input type="number" name="theta" value="0.00"></input>
+        </div>
+
+        <div>
+          <label for="nodesize">node size</label>
+          <input type="number" name="nodesize" value="6"></input>
+        </div>
+
+        <div>
+          <label for="spacing">spacing</label>
+          <input type="number" name="spacing" value="3"></input>
+        </div>
+
+        <div>
+          <label for="tempo">tempo</label>
+          <input type="number" name="tempo" value="0.05"></input>
+        </div>
+
+        <div>
+          <label for="ampl">amplitude</label>
+          <input type="number" name="ampl" value="20"></input>
+        </div>
+
+        <div>
+          <label for="period">period</label>
+          <input type="number" name="period" value="500"></input>
+        </div>
+    </div>
     <div class="design-het-wrapper">
       <design-het></design-het>
+      <script src="interface.js"></script>
     </div>
   </body>
 </html>
