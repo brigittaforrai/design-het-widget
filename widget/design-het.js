@@ -57,6 +57,12 @@
   window.customElements.define('design-het', DesignHet);
 })()
 
+let camRotation = {
+  x: 0,
+  y: 0,
+  z: 0
+}
+
 
 class Sketch {
   constructor (width, height) {
@@ -88,18 +94,48 @@ class Sketch {
 
     // camera
     p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2);
-    const cam = p.createCamera()
+    // const cam = p.createCamera()
     // cam.setPosition(-this.width/2, this.height/2, 0);
+
+    // const circle = new Circle(position, this.ampl, this.width, this.height)
+    // circle.create(p)
   }
 
   draw(p) {
-    p.orbitControl()
     p.background(0);
+    p.normalMaterial();
     this.theta += this.tempo
     let position = this.grid(p)
 
+    // this.orbit(p)
+    p.orbitControl()
+
     const circle = new Circle(position, this.ampl, this.width, this.height)
     circle.create(p)
+  }
+
+  orbit (p) {
+    const curCam = p._renderer._curCamera
+    const prevX = curCam.eyeX
+    const prevY = curCam.eyeY
+    const prevZ = curCam.eyeZ
+
+    p.orbitControl()
+
+    const x = curCam.eyeX
+    const y = curCam.eyeY
+    const z = curCam.eyeZ
+
+    // if (prevX !== x) {
+    //   camRotation.x = (x - prevX) + camRotation.x
+    // }
+    if (prevY !== y) {
+      camRotation.y = (y - prevY) + camRotation.y
+    }
+    // if (prevZ !== z) {
+    //   camRotation.z = (z - prevZ) + camRotation.z
+    // }
+    return camRotation
   }
 
   grid (p) { // TODO
@@ -119,7 +155,17 @@ class Sketch {
         let zp = (z * this.zgap)
 
         p.translate(xp, yp, zp)
-        p.sphere(this.nodeSize)
+
+        // if ((x >5 && x<10) && (z === 5)) {
+        //   p.sphere(this.nodeSize * 7)
+        //   p.fill(255)
+        //   p.rotateX(-1 * p.HALF_PI)
+        //   p.ellipse(0, 0, this.nodeSize * 15, this.nodeSize * 15);
+        //   p.fill(241, 67, 65)
+        // } else {
+          p.sphere(this.nodeSize)
+        // }
+
         p.pop()
         if(xp === 250 && zp === 250) {
           objpos = yp
@@ -152,6 +198,9 @@ class Circle {
       p.push()
       p.translate(0, this.ampl + 10 + o, this.position)
       p.rotateX(p.PI/2)
+      // p.rotateX(p.radians(-1 * (camRotation.x)))
+      // p.rotateY(p.radians(-1 * camRotation.y))
+      // p.rotateZ(p.radians(-1 * camRotation.z))
       p.ellipse(x + o*10, y, 100, 100);
       p.pop()
     }
