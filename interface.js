@@ -13,7 +13,7 @@ function interface() {
 
   const widget = document.querySelector('design-het')
 
-  const inputs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
+  const inputs = ['xgap', 'zgap', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
   inputs.forEach((name) => {
     events(name)
   })

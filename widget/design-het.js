@@ -22,7 +22,7 @@
         <source src="widget/music.mp3" type="audio/mpeg">
         <p>Your browser doesn't support HTML5 audio. Here is
       </audio>
-      
+
     </div>
   `
 
@@ -112,10 +112,6 @@ class Sketch {
     p.createCanvas(this.width, this.height, p.WEBGL)
     p.frameRate(25)
 
-    this.xNodes = parseInt(this.width / this.xgap)
-    this.yNodes = parseInt(this.height / this.zgap)
-    this.dx = (p.TWO_PI / this.period) * this.spacing
-
     // camera
     p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2);
     const cam = p.createCamera()
@@ -123,6 +119,11 @@ class Sketch {
   }
 
   draw(p) {
+    this.xNodes = parseInt(this.width / this.xgap)
+    this.yNodes = parseInt(this.height / this.zgap)
+    this.dx = (p.TWO_PI / this.period) * this.spacing
+
+    
     p.orbitControl()
     p.background(0);
     this.theta += this.tempo
