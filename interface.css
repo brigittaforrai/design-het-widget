@@ -1,23 +1,23 @@
 .interface {
-  position: absolute;
+  position: fixed;
   left: 10px;
   top: 10px;
   z-index: 10000;
-  max-width: 100%;
   padding: 5px;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
   flex-wrap: wrap;
-  align-items: left;
-  background: rgba(0, 0, 0, 0.6);
   border-radius: 10px;
+  width: 160px;
 }
 .interface > div {
   display: flex;
   flex-direction: row;
-  margin: 5px;
-  margin-left: 0;
+  margin: 5px 0;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 100%;
 }
 .interface > div:first-child {
   margin-top: 0;
@@ -28,11 +28,12 @@
 
 .interface input {
   padding: 10px 10px;
-  width: 40px;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   outline: none;
   border: 0px solid white;
+  flex-grow: 2;
+  width: auto;
 }
 
 .interface label {
