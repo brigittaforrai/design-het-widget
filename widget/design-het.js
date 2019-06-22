@@ -81,6 +81,30 @@
   window.customElements.define('design-het', DesignHet);
 })()
 
+function myOrbit () {
+  const sensitivityX = 1
+  const sensitivityY = 1
+  const mouseInCanvas =
+    this.mouseX < this.width &&
+    this.mouseX > 0 &&
+    this.mouseY < this.height &&
+    this.mouseY > 0;
+  if (!mouseInCanvas) return;
+
+  const cam = this._renderer._curCamera;
+  const scaleFactor = this.height < this.width ? this.height : this.width;
+
+  if (this.mouseIsPressed) {
+    if (this.mouseButton === this.LEFT) {
+      var deltaTheta =
+        -sensitivityX * (this.mouseX - this.pmouseX) / scaleFactor;
+      var deltaPhi = sensitivityY * (this.mouseY - this.pmouseY) / scaleFactor;
+      this._renderer._curCamera._orbit(deltaTheta, deltaPhi, 0);
+    }
+  }
+  return cam;
+}
+
 
 class Sketch {
   constructor (width, height) {
@@ -110,26 +134,29 @@ class Sketch {
   setup (p) {
     p.noCanvas()
     p.createCanvas(this.width, this.height, p.WEBGL)
-    p.frameRate(25)
+    // p.frameRate(25)
 
     // camera
     p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2);
     const cam = p.createCamera()
-    // cam.setPosition(-this.width/2, this.height/2, 0);
+
+    // p.debugMode()
+
+    p.myOrbit = myOrbit.bind(p)
   }
 
   draw(p) {
+    p.myOrbit()
+    p.background(0)
+
     this.xNodes = parseInt(this.width / this.xgap)
     this.yNodes = parseInt(this.height / this.zgap)
     this.dx = (p.TWO_PI / this.period) * this.spacing
-
-    
-    p.orbitControl()
-    p.background(0);
     this.theta += this.tempo
-    let position = this.grid(p)
 
-    const circle = new Circle(position, this.ampl, this.width, this.height)
+    const position = this.grid(p)
+
+    const circle = new Circle(position, this.ampl, this.width, this.height) // todo
     circle.create(p)
   }
 
@@ -177,13 +204,13 @@ class Circle {
     p.strokeWeight(2)
 
     let x = this.width / 2
-    let y = this.height / 2
+    let y = this.height / 3
 
     for (let o = 0; o < 11; o++) {
       p.push()
       p.translate(0, this.ampl + 10 + o, this.position)
       p.rotateX(p.PI/2)
-      p.ellipse(x + o*10, y, 100, 100);
+      p.ellipse(x + o*15, y, 120, 120);
       p.pop()
     }
   }
