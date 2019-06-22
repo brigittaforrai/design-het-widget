@@ -42,7 +42,7 @@
       this.createSketch()
 
       const musicPlay = () => {
-          this.shadowRoot.getElementById('audio').play()
+          // this.shadowRoot.getElementById('audio').play()
           document.removeEventListener('click', musicPlay)
           document.removeEventListener('scroll', musicPlay)
       }
@@ -84,25 +84,35 @@
 function myOrbit () {
   const sensitivityX = 1
   const sensitivityY = 1
+  const cam = this._renderer._curCamera;
+
   const mouseInCanvas =
     this.mouseX < this.width &&
     this.mouseX > 0 &&
     this.mouseY < this.height &&
     this.mouseY > 0;
-  if (!mouseInCanvas) return;
+  if (!mouseInCanvas) {
+    return cam
+  };
 
-  const cam = this._renderer._curCamera;
+
   const scaleFactor = this.height < this.width ? this.height : this.width;
+  let deltaPhi = 0
+  let deltaTheta = 0
 
   if (this.mouseIsPressed) {
     if (this.mouseButton === this.LEFT) {
-      var deltaTheta =
+      deltaTheta =
         -sensitivityX * (this.mouseX - this.pmouseX) / scaleFactor;
-      var deltaPhi = sensitivityY * (this.mouseY - this.pmouseY) / scaleFactor;
+      deltaPhi = sensitivityY * (this.mouseY - this.pmouseY) / scaleFactor;
       this._renderer._curCamera._orbit(deltaTheta, deltaPhi, 0);
     }
   }
-  return cam;
+  return {
+    cam: cam,
+    deltaTheta: deltaTheta,
+    deltaPhi: deltaPhi
+  }
 }
 
 
@@ -140,13 +150,15 @@ class Sketch {
     p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2);
     const cam = p.createCamera()
 
-    // p.debugMode()
+    p.debugMode()
 
     p.myOrbit = myOrbit.bind(p)
+
+    this.circle = new Circle(this.ampl, this.width, this.height)
   }
 
   draw(p) {
-    p.myOrbit()
+    const camera = p.myOrbit()
     p.background(0)
 
     this.xNodes = parseInt(this.width / this.xgap)
@@ -155,9 +167,9 @@ class Sketch {
     this.theta += this.tempo
 
     const position = this.grid(p)
+    // this.circle.create(p, {x: camera.eyeX, y: camera.eyeY, z:camera.eyeZ}, position)
+    this.circle.create(p, camera, position)
 
-    const circle = new Circle(position, this.ampl, this.width, this.height) // todo
-    circle.create(p)
   }
 
   grid (p) { // TODO
@@ -190,26 +202,57 @@ class Sketch {
 }
 
 class Circle {
-  constructor (position, ampl, width, height) {
-    this.position = position
+  constructor (ampl, width, height) {
+    this.position = null
     this.width = width
     this.height = height
     this.ampl = ampl
   }
 
-  create (p) {
-    p.rotateX(p.HALF_PI)
+  create (p, cam, position) {
+    let dRadius = 0
+
+    let camTheta
+    let camPhi
+
+    if (cam.deltaPhi && cam.deltaTheta) {
+      let dTheta = cam.deltaTheta
+      let dPhi = cam.deltaPhi
+      var diffX = cam.cam.eyeX - cam.cam.centerX;
+      var diffY = cam.cam.eyeY - cam.cam.centerY;
+      var diffZ = cam.cam.eyeZ - cam.cam.centerZ;
+
+      // get spherical coorinates for current camera position about origin
+      var camRadius = Math.sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
+      // from https://github.com/mrdoob/three.js/blob/dev/src/math/Spherical.js#L72-L73
+      camTheta = Math.atan2(diffX, diffZ); // equatorial angle
+      camPhi = Math.acos(Math.max(-1, Math.min(1, diffY / camRadius))); // polar angle
+
+      // add change
+      camTheta += dTheta;
+      camPhi += dPhi;
+      camRadius += dRadius;
+      console.log(camPhi);
+    }
+
+
+    this.position = position
+    p.rotateX(p.PI/2)
     p.fill(241, 67, 65)
     p.stroke(255)
     p.strokeWeight(2)
 
+
     let x = this.width / 2
     let y = this.height / 3
 
-    for (let o = 0; o < 11; o++) {
+    for (let o = 0; o < 15; o++) {
       p.push()
+
       p.translate(0, this.ampl + 10 + o, this.position)
+      if (camPhi) p.rotateX(-camPhi)
       p.rotateX(p.PI/2)
+      if (camTheta) p.rotateZ(-camTheta )
       p.ellipse(x + o*15, y, 120, 120);
       p.pop()
     }

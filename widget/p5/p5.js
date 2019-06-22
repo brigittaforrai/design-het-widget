@@ -78719,6 +78719,7 @@ p5.Camera.prototype._orbit = function(dTheta, dPhi, dRadius) {
   var _y = Math.cos(camPhi) * camRadius;
   var _z = Math.sin(camPhi) * camRadius * Math.cos(camTheta);
 
+
   this.camera(
     _x + this.centerX,
     _y + this.centerY,
