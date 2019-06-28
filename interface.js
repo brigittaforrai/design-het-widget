@@ -39,7 +39,7 @@ function interface() {
 
   function events (name) {
     const selector = `input[name=${name}]`
-    document.querySelector(selector).addEventListener('change', (e) => {
+    document.querySelector(selector).addEventListener('input', (e) => {
       const value = e.target.value
       widgetData[name] = value
       widget.setAttribute(name, value)
