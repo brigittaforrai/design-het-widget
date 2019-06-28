@@ -81,6 +81,9 @@
   window.customElements.define('design-het', DesignHet);
 })()
 
+let deltaPhi = 0
+let deltaTheta = 0
+
 function myOrbit () {
   const sensitivityX = 1
   const sensitivityY = 1
@@ -97,8 +100,6 @@ function myOrbit () {
 
 
   const scaleFactor = this.height < this.width ? this.height : this.width;
-  let deltaPhi = 0
-  let deltaTheta = 0
 
   if (this.mouseIsPressed) {
     if (this.mouseButton === this.LEFT) {
@@ -120,6 +121,7 @@ class Sketch {
   constructor (width, height) {
     this.width = width
     this.height = height
+    this.selectedPosition = null
 
     this.dx = null
     this.xNodes = null
@@ -150,7 +152,7 @@ class Sketch {
     p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2);
     const cam = p.createCamera()
 
-    p.debugMode()
+    // p.debugMode()
 
     p.myOrbit = myOrbit.bind(p)
 
@@ -166,9 +168,8 @@ class Sketch {
     this.dx = (p.TWO_PI / this.period) * this.spacing
     this.theta += this.tempo
 
-    const position = this.grid(p)
-    // this.circle.create(p, {x: camera.eyeX, y: camera.eyeY, z:camera.eyeZ}, position)
-    this.circle.create(p, camera, position)
+    this.grid(p)
+    this.circle.create(p, camera, this.selectedPosition)
 
   }
 
@@ -192,12 +193,11 @@ class Sketch {
         p.sphere(this.nodesize)
         p.pop()
         if(xp === 250 && zp === 250) {
-          objpos = yp
+          this.selectedPosition = yp
         }
         a += this.dx
       }
     }
-    return objpos
   }
 }
 
@@ -210,33 +210,32 @@ class Circle {
   }
 
   create (p, cam, position) {
+    this.position = position
     let dRadius = 0
 
     let camTheta
     let camPhi
 
-    if (cam.deltaPhi && cam.deltaTheta) {
-      let dTheta = cam.deltaTheta
-      let dPhi = cam.deltaPhi
-      var diffX = cam.cam.eyeX - cam.cam.centerX;
-      var diffY = cam.cam.eyeY - cam.cam.centerY;
-      var diffZ = cam.cam.eyeZ - cam.cam.centerZ;
+    // todo kor rotation nem jo
+    // if (cam.deltaPhi && cam.deltaTheta) {
+    //   let dTheta = cam.deltaTheta
+    //   let dPhi = cam.deltaPhi
+    //   var diffX = cam.cam.eyeX - cam.cam.centerX;
+    //   var diffY = cam.cam.eyeY - cam.cam.centerY;
+    //   var diffZ = cam.cam.eyeZ - cam.cam.centerZ;
+    //
+    //   // get spherical coorinates for current camera position about origin
+    //   var camRadius = Math.sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
+    //   // from https://github.com/mrdoob/three.js/blob/dev/src/math/Spherical.js#L72-L73
+    //   camTheta = Math.atan2(diffX, diffZ); // equatorial angle
+    //   camPhi = Math.acos(Math.max(-1, Math.min(1, diffY / camRadius))); // polar angle
+    //
+    //   // add change
+    //   camTheta += dTheta;
+    //   camPhi += dPhi;
+    //   camRadius += dRadius;
+    // }
 
-      // get spherical coorinates for current camera position about origin
-      var camRadius = Math.sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
-      // from https://github.com/mrdoob/three.js/blob/dev/src/math/Spherical.js#L72-L73
-      camTheta = Math.atan2(diffX, diffZ); // equatorial angle
-      camPhi = Math.acos(Math.max(-1, Math.min(1, diffY / camRadius))); // polar angle
-
-      // add change
-      camTheta += dTheta;
-      camPhi += dPhi;
-      camRadius += dRadius;
-      console.log(camPhi);
-    }
-
-
-    this.position = position
     p.rotateX(p.PI/2)
     p.fill(241, 67, 65)
     p.stroke(255)
