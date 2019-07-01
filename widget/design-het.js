@@ -56,9 +56,11 @@
       new p5 ((p) => {
         p.setup = () => {
           this.sketch.setup(p)
+          this.p = p
 
           // move p5 default canvas inside widget
           const canvas = document.querySelector('canvas')
+          this.canvas = canvas
           canvas.parentNode.removeChild(canvas)
           const widget = this.shadowRoot.querySelector('.widget-container')
           widget.appendChild(canvas)
@@ -72,10 +74,14 @@
 
     disconnectedCallback () {}
     static get observedAttributes() {
-      return ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period'];
+      return ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period', 'save'];
     }
     attributeChangedCallback (attrName, oldval, newVal) {
       this.sketch.update(attrName, newVal)
+
+      if (attrName === 'save' && newVal) {
+        this.p.save('canvas.jpg') // TODO
+      }
     }
   }
   window.customElements.define('design-het', DesignHet);

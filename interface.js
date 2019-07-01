@@ -26,6 +26,7 @@ function interface() {
   const triggerBtn = document.querySelector('button.toggle-settings')
   const muteBtn = document.querySelector('button.mute')
   const settings = document.querySelector('.interface')
+  const saveBtn = document.querySelector('.save')
 
   const inputs = ['xgap', 'zgap', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
   inputs.forEach((name) => {
@@ -55,6 +56,10 @@ function interface() {
       settings.classList.remove('closed')
       settings.classList.add('open')
     }
+  })
+
+  saveBtn. addEventListener('click', function () {
+    widget.setAttribute('save', true)
   })
 }
 
