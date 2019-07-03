@@ -40,11 +40,13 @@
 
     connectedCallback () {
       this.createSketch()
+      console.log('connected');
 
       const musicPlay = () => {
-          // this.shadowRoot.getElementById('audio').play()
-          document.removeEventListener('click', musicPlay)
-          document.removeEventListener('scroll', musicPlay)
+        console.log('play music');
+        this.shadowRoot.getElementById('audio').play()
+        document.removeEventListener('click', musicPlay)
+        document.removeEventListener('scroll', musicPlay)
       }
       document.addEventListener('click', musicPlay)
       document.addEventListener('scroll', musicPlay)
