@@ -17,14 +17,10 @@
       }
     </style>
     <div class="widget-container">
-
-      <slot></slot>
-
       <audio id="audio" controls autoplay loop>
         <source src="widget/music.mp3" type="audio/mpeg">
         <p>Your browser doesn't support HTML5 audio. Here is
       </audio>
-
     </div>
   `
 
@@ -71,6 +67,7 @@
         }
 
         p.draw = () => { this.sketch.draw(p) }
+        p.windowResized = () => {this.sketch.windowResized(p)}
         // p.mouseReleased = (e) => { }
         // p.mouseDragged = (e) => { }
       })
@@ -167,6 +164,10 @@ class Sketch {
     p.myOrbit = myOrbit.bind(p)
 
     this.circle = new Circle(this.ampl, this.width, this.height)
+  }
+
+  windowResized(p) {
+    p.resizeCanvas(p.windowWidth, p.windowHeight)
   }
 
   draw(p) {
