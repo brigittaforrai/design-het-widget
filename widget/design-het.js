@@ -18,6 +18,8 @@
     </style>
     <div class="widget-container">
 
+      <slot></slot>
+
       <audio id="audio" controls autoplay loop>
         <source src="widget/music.mp3" type="audio/mpeg">
         <p>Your browser doesn't support HTML5 audio. Here is
