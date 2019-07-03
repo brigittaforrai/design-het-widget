@@ -24,21 +24,22 @@
     </div>
   `
 
+  const inputAttrs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
+  const attrs = ['save', 'fullscreen']
+
   class DesignHet extends HTMLElement {
     constructor() {
       super()
-      this.attachShadow({mode: 'open'});
-      this.shadowRoot.appendChild(template.content.cloneNode(true));
+      this.attachShadow({mode: 'open'})
+      this.shadowRoot.appendChild(template.content.cloneNode(true))
 
       this.sketch = null
-
       this.width = window.innerWidth
       this.height = window.innerHeight
     }
 
     connectedCallback () {
       this.createSketch()
-      console.log('connected');
 
       const musicPlay = () => {
         console.log('play music');
@@ -74,14 +75,20 @@
     }
 
     disconnectedCallback () {}
+
     static get observedAttributes() {
-      return ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period', 'save'];
+      return inputAttrs.concat(attrs)
     }
     attributeChangedCallback (attrName, oldval, newVal) {
-      this.sketch.update(attrName, newVal)
-
       if (attrName === 'save' && newVal) {
-        this.p.save('canvas.jpg') // TODO
+        this.p.save('designhet.png') // TODO
+      }
+      if (attrName === 'fullscreen') {
+        this.sketch.fullscreen = (newVal === 'true')
+      }
+
+      if (inputAttrs.indexOf(attrName) >= 0) {
+        this.sketch.update(attrName, newVal)
       }
     }
   }
@@ -128,7 +135,9 @@ class Sketch {
   constructor (width, height) {
     this.width = width
     this.height = height
+    this.fullscreen = false
     this.selectedPosition = null
+    this.camera = null
 
     this.dx = null
     this.xNodes = null
@@ -171,7 +180,13 @@ class Sketch {
   }
 
   draw(p) {
-    const camera = p.myOrbit()
+    if (this.fullscreen) {
+      this.camera = p.myOrbit()
+    }
+    if (!this.fullscreen) {
+      // todo visszafordul a sketch
+    }
+
     p.background(0)
 
     this.xNodes = parseInt(this.width / this.xgap)
@@ -180,7 +195,7 @@ class Sketch {
     this.theta += this.tempo
 
     this.grid(p)
-    this.circle.create(p, camera, this.selectedPosition)
+    this.circle.create(p, this.camera, this.selectedPosition)
 
   }
 
