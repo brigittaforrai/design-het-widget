@@ -165,8 +165,8 @@ class Sketch {
     // p.frameRate(25)
 
     // camera
-    p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2);
-    const cam = p.createCamera()
+    // p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2);
+    // const cam = p.createCamera()
 
     // p.debugMode()
 
@@ -181,6 +181,8 @@ class Sketch {
 
   draw(p) {
     if (this.fullscreen) {
+      // todo ez igy nem lesz jo
+      p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2);
       this.camera = p.myOrbit()
     }
     if (!this.fullscreen) {
