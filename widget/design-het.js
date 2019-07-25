@@ -197,7 +197,8 @@ class Sketch {
     this.theta += this.tempo
 
     this.grid(p)
-    this.circle.create(p, this.camera, this.selectedPosition)
+    // todo temp hide
+    // this.circle.create(p, this.camera, this.selectedPosition)
 
   }
 
