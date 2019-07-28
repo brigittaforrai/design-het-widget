@@ -26,8 +26,6 @@
 
   const inputAttrs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
   const attrs = ['save', 'fullscreen', 'mute']
-  const dpi = 300
-  const dpiDivider = 2.54
 
   class DesignHet extends HTMLElement {
     constructor() {
@@ -41,8 +39,10 @@
     }
 
     connectedCallback () {
-      this.createSketch()
+      this.sketch = new Sketch(this.width, this.height, this.shadowRoot)
+      new p5(this.sketch.setupP5);
 
+      // todo use p5 ?
       const musicPlay = () => {
         this.audio = this.shadowRoot.getElementById('audio')
         this.audio.play()
@@ -53,47 +53,19 @@
       document.addEventListener('scroll', musicPlay)
     }
 
-    createSketch () {
-      this.sketch = new Sketch(this.width, this.height)
-
-      new p5 ((p) => {
-        p.setup = () => {
-          this.sketch.setup(p)
-          this.p = p
-
-          // move p5 default canvas inside widget
-          const canvas = document.querySelector('canvas')
-          this.canvas = canvas
-          canvas.parentNode.removeChild(canvas)
-          const widget = this.shadowRoot.querySelector('.widget-container')
-          widget.appendChild(canvas)
-        }
-
-        p.draw = () => { this.sketch.draw(p) }
-        p.windowResized = () => {this.sketch.windowResized(p)}
-        // p.mouseReleased = (e) => { }
-        // p.mouseDragged = (e) => { }
-      })
-    }
-
-    disconnectedCallback () {}
-
     static get observedAttributes() {
       return inputAttrs.concat(attrs)
     }
+
     attributeChangedCallback (attrName, oldval, newVal) {
       if (attrName === 'save' && newVal) {
-        this.p.resizeCanvas(this.p.windowWidth * dpi / dpiDivider, this.p.windowHeight * dpi / dpiDivider)
-        this.p.saveCanvas('designhet.png') // TODO
-        this.p.resizeCanvas(this.p.windowWidth, this.p.windowHeight)
+        this.sketch.saveCanvas()
+      }
 
-        // this.p.saveFrames('out', 'png', 1, 1, data => {
-        //   print(data);
-        // });
-      }
       if (attrName === 'fullscreen') {
-        this.sketch.fullscreen = (newVal === 'true')
+        this.sketch.setFullscreen(newVal)
       }
+
       if ((attrName === 'mute') && this.audio) {
         if (newVal === 'true') {
           this.audio.pause()
@@ -110,49 +82,14 @@
   window.customElements.define('design-het', DesignHet);
 })()
 
-let deltaPhi = 0
-let deltaTheta = 0
-
-function myOrbit () {
-  const sensitivityX = 1
-  const sensitivityY = 1
-  const cam = this._renderer._curCamera;
-
-  const mouseInCanvas =
-    this.mouseX < this.width &&
-    this.mouseX > 0 &&
-    this.mouseY < this.height &&
-    this.mouseY > 0;
-  if (!mouseInCanvas) {
-    return cam
-  };
-
-
-  const scaleFactor = this.height < this.width ? this.height : this.width;
-
-  if (this.mouseIsPressed) {
-    if (this.mouseButton === this.LEFT) {
-      deltaTheta =
-        -sensitivityX * (this.mouseX - this.pmouseX) / scaleFactor;
-      deltaPhi = sensitivityY * (this.mouseY - this.pmouseY) / scaleFactor;
-      this._renderer._curCamera._orbit(deltaTheta, deltaPhi, 0);
-    }
-  }
-  return {
-    cam: cam,
-    deltaTheta: deltaTheta,
-    deltaPhi: deltaPhi
-  }
-}
-
 
 class Sketch {
-  constructor (width, height) {
+  constructor (width, height, shadowRoot) {
     this.width = width
     this.height = height
-    this.fullscreen = false
+    this.shadowRoot = shadowRoot
     this.selectedPosition = null
-    this.camera = null
+    this.fullscreen = false
 
     this.dx = null
     this.xNodes = null
@@ -166,6 +103,64 @@ class Sketch {
     this.tempo = 0.05
     this.ampl = 20
     this.period = 500
+    this.setupP5 = this.setupP5.bind(this)
+  }
+
+  setupP5 (p) {
+    this.p = p
+    p.setup = () => { this.setup() }
+    p.draw = () => { this.draw() }
+    p.windowResized = () => { this.windowResized() }
+  }
+
+  setFullscreen (val) {
+    const enabled = val === 'true'
+    this.p.fullscreen(enabled);
+    this.fullscreen = enabled
+  }
+
+  saveCanvas() {
+
+  }
+
+  setOrtho () {
+    this.p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2, 0, this.width * 3);
+  }
+
+  setup () {
+    this.p.noCanvas()
+    this.p.createCanvas(this.width, this.height, this.p.WEBGL)
+    this.p.pixelDensity(30); // todo
+    this.setOrtho()
+
+    // move p5 default canvas inside widget
+    const canvas = document.querySelector('canvas')
+    canvas.parentNode.removeChild(canvas)
+    const widget = this.shadowRoot.querySelector('.widget-container')
+    widget.appendChild(canvas)
+
+    // this.circle = new Circle(this.ampl, this.width, this.height)
+  }
+
+  draw () {
+    this.p.background(0)
+
+    if (this.fullscreen) {
+      this.p.orbitControl()
+    }
+
+    this.p.normalMaterial()
+    this.p.rotateX(0.2);
+    this.p.rotateY(-0.2);
+
+    this.xNodes = parseInt(this.width / this.xgap)
+    this.yNodes = parseInt(this.height / this.zgap)
+    this.dx = (this.p.TWO_PI / this.period) * this.spacing
+    this.theta += this.tempo
+
+    this.drawGrid()
+    // todo temp hide
+    // this.circle.create(this, this.camera, this.selectedPosition)
   }
 
   update (name, val) {
@@ -174,70 +169,32 @@ class Sketch {
     }
   }
 
-  setup (p) {
-    p.noCanvas()
-    p.createCanvas(this.width, this.height, p.WEBGL)
-    // p.frameRate(25)
-
-    // camera
-    // p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2);
-    // const cam = p.createCamera()
-
-    // p.debugMode()
-    let pixel = p.pixelDensity(); // todo
-    console.log(pixel, 'pixel');
-
-    p.myOrbit = myOrbit.bind(p)
-
-    this.circle = new Circle(this.ampl, this.width, this.height)
+  windowResized() {
+    this.width = this.p.windowWidth
+    this.height = this.p.windowHeight
+    this.p.resizeCanvas(this.width, this.height)
+    this.setOrtho()
   }
 
-  windowResized(p) {
-    p.resizeCanvas(p.windowWidth, p.windowHeight)
-  }
+  drawGrid () { // TODO
+    this.p.noStroke()
+    this.p.fill(241, 67, 65)
 
-  draw(p) {
-    if (this.fullscreen) {
-      // todo ez igy nem lesz jo
-      p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2);
-      this.camera = p.myOrbit()
-    }
-    if (!this.fullscreen) {
-      // todo visszafordul a sketch
-    }
-
-    p.background(0)
-
-    this.xNodes = parseInt(this.width / this.xgap)
-    this.yNodes = parseInt(this.height / this.zgap)
-    this.dx = (p.TWO_PI / this.period) * this.spacing
-    this.theta += this.tempo
-
-    this.grid(p)
-    // todo temp hide
-    // this.circle.create(p, this.camera, this.selectedPosition)
-
-  }
-
-  grid (p) { // TODO
-    p.noStroke()
-    p.fill(241, 67, 65)
-
-    p.translate(-this.width/2, this.height/2, 0)
+    this.p.translate(-this.width/2, this.height/2, 0)
     let objpos = 0
     let a = this.theta
 
     for(let x = 0; x<= this.xNodes; x++) {
-      let yp = p.sin(a) * this.ampl
+      let yp = this.p.sin(a) * this.ampl
       for(let z = 0; z<= this.yNodes; z++) {
-        p.push()
-        p.rotateX(p.HALF_PI)
+        this.p.push()
+        this.p.rotateX(this.p.HALF_PI)
         let xp = (x * this.xgap)
         let zp = (z * this.zgap)
 
-        p.translate(xp, yp, zp)
-        p.sphere(this.nodesize)
-        p.pop()
+        this.p.translate(xp, yp, zp)
+        this.p.sphere(this.nodesize)
+        this.p.pop()
         if(xp === 250 && zp === 250) {
           this.selectedPosition = yp
         }
@@ -301,5 +258,40 @@ class Circle {
       p.ellipse(x + o*15, y, 120, 120);
       p.pop()
     }
+  }
+}
+
+let deltaPhi = 0
+let deltaTheta = 0
+
+function myOrbit () {
+  const sensitivityX = 1
+  const sensitivityY = 1
+  const cam = this._renderer._curCamera;
+  this.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2);
+
+  const mouseInCanvas =
+    this.mouseX < this.width &&
+    this.mouseX > 0 &&
+    this.mouseY < this.height &&
+    this.mouseY > 0;
+  if (!mouseInCanvas) {
+    return cam
+  };
+
+  const scaleFactor = this.height < this.width ? this.height : this.width;
+
+  if (this.mouseIsPressed) {
+    if (this.mouseButton === this.LEFT) {
+      deltaTheta =
+        -sensitivityX * (this.mouseX - thismouseX) / scaleFactor;
+      deltaPhi = sensitivityY * (this.mouseY - thismouseY) / scaleFactor;
+      this._renderer._curCamera._orbit(deltaTheta, deltaPhi, 0);
+    }
+  }
+  return {
+    cam: cam,
+    deltaTheta: deltaTheta,
+    deltaPhi: deltaPhi
   }
 }
