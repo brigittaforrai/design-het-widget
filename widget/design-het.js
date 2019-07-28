@@ -120,7 +120,7 @@ class Sketch {
   }
 
   saveCanvas() {
-
+    this.p.saveCanvas('designhet.png')
   }
 
   setOrtho () {
@@ -130,7 +130,7 @@ class Sketch {
   setup () {
     this.p.noCanvas()
     this.p.createCanvas(this.width, this.height, this.p.WEBGL)
-    this.p.pixelDensity(30); // todo
+    // this.p.pixelDensity(30); // todo
     this.setOrtho()
 
     // move p5 default canvas inside widget
