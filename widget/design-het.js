@@ -26,6 +26,8 @@
 
   const inputAttrs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
   const attrs = ['save', 'fullscreen', 'mute']
+  const dpi = 300
+  const dpiDivider = 2.54
 
   class DesignHet extends HTMLElement {
     constructor() {
@@ -81,7 +83,13 @@
     }
     attributeChangedCallback (attrName, oldval, newVal) {
       if (attrName === 'save' && newVal) {
-        this.p.save('designhet.png') // TODO
+        this.p.resizeCanvas(this.p.windowWidth * dpi / dpiDivider, this.p.windowHeight * dpi / dpiDivider)
+        this.p.saveCanvas('designhet.png') // TODO
+        this.p.resizeCanvas(this.p.windowWidth, this.p.windowHeight)
+
+        // this.p.saveFrames('out', 'png', 1, 1, data => {
+        //   print(data);
+        // });
       }
       if (attrName === 'fullscreen') {
         this.sketch.fullscreen = (newVal === 'true')
@@ -176,6 +184,8 @@ class Sketch {
     // const cam = p.createCamera()
 
     // p.debugMode()
+    let pixel = p.pixelDensity(); // todo
+    console.log(pixel, 'pixel');
 
     p.myOrbit = myOrbit.bind(p)
 
