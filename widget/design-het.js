@@ -119,8 +119,25 @@ class Sketch {
     this.fullscreen = enabled
   }
 
+  // todo streamSaver
   saveCanvas() {
+    const aspect = this.width / this.height
+
+    // let wA3 = 420
+    // let hA3 = 297
+    // const dpi = 300
+    // const divider = 2.54
+    // const width = Math.round(dpi * wA3 / divider)
+    // const height = Math.round(width / aspect)
+
+    const width = 4096
+    const height = Math.round(width / aspect)
+
+    this.p.resizeCanvas(width, height)
+    this.setOrtho()
     this.p.saveCanvas('designhet.png')
+    this.p.resizeCanvas(this.width, this.height)
+    this.setOrtho()
   }
 
   setOrtho () {
@@ -130,7 +147,7 @@ class Sketch {
   setup () {
     this.p.noCanvas()
     this.p.createCanvas(this.width, this.height, this.p.WEBGL)
-    // this.p.pixelDensity(30); // todo
+    this.p.pixelDensity(4); // todo
     this.setOrtho()
 
     // move p5 default canvas inside widget
