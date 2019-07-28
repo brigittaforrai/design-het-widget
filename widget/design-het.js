@@ -120,6 +120,7 @@ class Sketch {
   }
 
   // todo streamSaver
+  // a3 print pixels: 3 508 x 4 961 px
   saveCanvas() {
     const aspect = this.width / this.height
 
@@ -130,7 +131,7 @@ class Sketch {
     // const width = Math.round(dpi * wA3 / divider)
     // const height = Math.round(width / aspect)
 
-    const width = 4096
+    const width = 4961
     const height = Math.round(width / aspect)
 
     this.p.resizeCanvas(width, height)
