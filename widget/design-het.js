@@ -25,7 +25,7 @@
   `
 
   const inputAttrs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
-  const attrs = ['save', 'fullscreen']
+  const attrs = ['save', 'fullscreen', 'mute']
 
   class DesignHet extends HTMLElement {
     constructor() {
@@ -42,8 +42,8 @@
       this.createSketch()
 
       const musicPlay = () => {
-        console.log('play music');
-        this.shadowRoot.getElementById('audio').play()
+        this.audio = this.shadowRoot.getElementById('audio')
+        this.audio.play()
         document.removeEventListener('click', musicPlay)
         document.removeEventListener('scroll', musicPlay)
       }
@@ -85,6 +85,13 @@
       }
       if (attrName === 'fullscreen') {
         this.sketch.fullscreen = (newVal === 'true')
+      }
+      if ((attrName === 'mute') && this.audio) {
+        if (newVal === 'true') {
+          this.audio.pause()
+        } else if (newVal === 'false') {
+          this.audio.play()
+        }
       }
 
       if (inputAttrs.indexOf(attrName) >= 0) {

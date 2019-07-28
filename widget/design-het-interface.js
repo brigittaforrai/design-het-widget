@@ -128,6 +128,7 @@
 
     connectedCallback () {
       this.isFullscreen = false
+      this.muted = false
 
       this.widget = document.querySelector('design-het')
       this.triggerBtn = this.shadowRoot.querySelector('button.toggle-settings')
@@ -192,6 +193,11 @@
           this.widget.setAttribute('fullscreen', this.fullscreen)
           this.widget.style.zIndex = 9999
         }
+      })
+
+      this.muteBtn.addEventListener('click', () => {
+        this.muted = !this.muted
+        this.widget.setAttribute('mute', this.muted)
       })
     }
 
