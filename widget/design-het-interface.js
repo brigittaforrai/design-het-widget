@@ -178,12 +178,12 @@
       // toggle fullscreen
       this.fullscreenBtn.addEventListener('click', () => {
         if (this.fullscreen) {
-          // this.exitFullscreen()
+          this.exitFullscreen()
           this.fullscreen = false
           this.widget.setAttribute('fullscreen', this.fullscreen)
           this.widget.style.zIndex = -100
         } else {
-          // this.openFullscreen()
+          this.openFullscreen()
           this.fullscreen = true
           this.widget.setAttribute('fullscreen', this.fullscreen)
           this.widget.style.zIndex = 9999
@@ -197,34 +197,39 @@
 
       // trigger save image
       this.saveBtn.addEventListener('click', () => {
-        this.widget.setAttribute('save', true)
+        this.widget.setAttribute('stop', true)
+        // const imageName = prompt("save image as", "design het");
+        //
+        // if (imageName != null) {
+        //   this.widget.setAttribute('saveas', imageName)
+        // }
       })
     }
 
-    // openFullscreen () {
-    //   if (this.elem.requestFullscreen) {
-    //     this.elem.requestFullscreen()
-    //   } else if (this.elem.mozRequestFullScreen) { /* Firefox */
-    //     this.elem.mozRequestFullScreen()
-    //   } else if (this.elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-    //     this.elem.webkitRequestFullscreen()
-    //   } else if (elem.msRequestFullscreen) { /* IE/Edge */
-    //     this.elem.msRequestFullscreen()
-    //   }
-    // }
+    openFullscreen () {
+      if (this.elem.requestFullscreen) {
+        this.elem.requestFullscreen()
+      } else if (this.elem.mozRequestFullScreen) { /* Firefox */
+        this.elem.mozRequestFullScreen()
+      } else if (this.elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+        this.elem.webkitRequestFullscreen()
+      } else if (elem.msRequestFullscreen) { /* IE/Edge */
+        this.elem.msRequestFullscreen()
+      }
+    }
 
-    // exitFullscreen () {
-    //   console.log('exit');
-    //   if (document.exitFullscreen) {
-    //     document.exitFullscreen()
-    //   } else if (document.mozCancelFullScreen) { /* Firefox */
-    //     document.mozCancelFullScreen()
-    //   } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
-    //     document.webkitExitFullscreen()
-    //   } else if (document.msExitFullscreen) { /* IE/Edge */
-    //     document.msExitFullscreen()
-    //   }
-    // }
+    exitFullscreen () {
+      console.log('exit');
+      if (document.exitFullscreen) {
+        document.exitFullscreen()
+      } else if (document.mozCancelFullScreen) { /* Firefox */
+        document.mozCancelFullScreen()
+      } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+        document.webkitExitFullscreen()
+      } else if (document.msExitFullscreen) { /* IE/Edge */
+        document.msExitFullscreen()
+      }
+    }
   }
   window.customElements.define('design-het-interface', DesignHetInterface);
 })()

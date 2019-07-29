@@ -7,16 +7,82 @@
     .widget-container {
       width: 100%;
       height: 100%;
+      background-color: black;
+      /* display: flex;
+      justify-content: center;
+      align-items: center; */
       }
       canvas {
       visibility: visible !important;
       z-index: -1000;
+      background-color: rgba(0,0,0,0);
       }
       audio {
         display: none;
       }
+      .loader,
+      .loader:before,
+      .loader:after {
+        border-radius: 50%;
+        width: 2.5em;
+        height: 2.5em;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+        -webkit-animation: load7 1.8s infinite ease-in-out;
+        animation: load7 1.8s infinite ease-in-out;
+      }
+      .loader {
+        color: #ff2836;
+        font-size: 10px;
+        margin: 80px auto;
+        position: absolute;
+        text-indent: -9999em;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation-delay: -0.16s;
+        animation-delay: -0.16s;
+        top: calc(50% - 40px);
+        left: calc(50% - 40px);
+        display: none;
+      }
+      .loader:before,
+      .loader:after {
+        content: '';
+        position: absolute;
+        top: 0;
+      }
+      .loader:before {
+        left: -3.5em;
+        -webkit-animation-delay: -0.32s;
+        animation-delay: -0.32s;
+      }
+      .loader:after {
+        left: 3.5em;
+      }
+      @-webkit-keyframes load7 {
+        0%,
+        80%,
+        100% {
+          box-shadow: 0 2.5em 0 -1.3em;
+        }
+        40% {
+          box-shadow: 0 2.5em 0 0;
+        }
+      }
+      @keyframes load7 {
+        0%,
+        80%,
+        100% {
+          box-shadow: 0 2.5em 0 -1.3em;
+        }
+        40% {
+          box-shadow: 0 2.5em 0 0;
+        }
+      }
     </style>
     <div class="widget-container">
+      <div class="loader">Downloading image ...</div>
       <audio id="audio" controls autoplay loop>
         <source src="widget/music.mp3" type="audio/mpeg">
         <p>Your browser doesn't support HTML5 audio. Here is
@@ -25,7 +91,7 @@
   `
 
   const inputAttrs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
-  const attrs = ['save', 'fullscreen', 'mute']
+  const attrs = ['saveas', 'stop', 'fullscreen', 'mute']
 
   class DesignHet extends HTMLElement {
     constructor() {
@@ -58,8 +124,11 @@
     }
 
     attributeChangedCallback (attrName, oldval, newVal) {
-      if (attrName === 'save' && newVal) {
-        this.sketch.saveCanvas()
+      if (attrName === 'saveas' && newVal) {
+        this.sketch.save(newVal)
+      }
+      if (attrName === 'stop' && newVal) {
+        this.sketch.stop()
       }
 
       if (attrName === 'fullscreen') {
@@ -84,12 +153,13 @@
 
 
 class Sketch {
-  constructor (width, height, shadowRoot) {
+  constructor (width, height, shadowRoot, toSave) {
     this.width = width
     this.height = height
     this.shadowRoot = shadowRoot
     this.selectedPosition = null
     this.fullscreen = false
+    this.background ='rgba(0, 0, 0, 1)'
 
     this.dx = null
     this.xNodes = null
@@ -104,6 +174,17 @@ class Sketch {
     this.ampl = 20
     this.period = 500
     this.setupP5 = this.setupP5.bind(this)
+
+    this.loader = this.shadowRoot.querySelector('.loader')
+  }
+
+  stop() {
+    this.p.noLoop()
+    this.save()
+  }
+
+  play() {
+    this.p.loop()
   }
 
   setupP5 (p) {
@@ -114,31 +195,28 @@ class Sketch {
   }
 
   setFullscreen (val) {
-    const enabled = val === 'true'
-    this.p.fullscreen(enabled);
-    this.fullscreen = enabled
+    this.fullscreen = val === 'true'
   }
 
-  // todo streamSaver
-  // a3 print pixels: 3 508 x 4 961 px
-  saveCanvas() {
+  save() {
+    this.canvas.style.display = 'none'
+    this.loader.style.display = 'block'
     const aspect = this.width / this.height
-
-    // let wA3 = 420
-    // let hA3 = 297
-    // const dpi = 300
-    // const divider = 2.54
-    // const width = Math.round(dpi * wA3 / divider)
-    // const height = Math.round(width / aspect)
-
     const width = 4961
     const height = Math.round(width / aspect)
+    this.background = 'rgba(0, 0, 0, 0)'
+    this.p.resizeCanvas(width, height, true)
+    this.setOrtho()
+    this.p.redraw()
 
-    this.p.resizeCanvas(width, height)
-    this.setOrtho()
-    this.p.saveCanvas('designhet.png')
-    this.p.resizeCanvas(this.width, this.height)
-    this.setOrtho()
+    this.canvas.toBlob((blob) => {
+      saveAs(blob, 'design-het.png');
+      this.p.resizeCanvas(this.width, this.height, true)
+      this.setOrtho()
+      this.play()
+      this.canvas.style.display = 'block'
+      this.loader.style.display = 'none'
+    })
   }
 
   setOrtho () {
@@ -152,22 +230,23 @@ class Sketch {
     this.setOrtho()
 
     // move p5 default canvas inside widget
-    const canvas = document.querySelector('canvas')
-    canvas.parentNode.removeChild(canvas)
+    this.canvas = document.querySelector('canvas')
+    this.canvas.parentNode.removeChild(this.canvas)
     const widget = this.shadowRoot.querySelector('.widget-container')
-    widget.appendChild(canvas)
+    widget.appendChild(this.canvas)
 
     // this.circle = new Circle(this.ampl, this.width, this.height)
   }
 
   draw () {
-    this.p.background(0)
+    this.p.clear()
+    this.p.background(this.background)
+
 
     if (this.fullscreen) {
       this.p.orbitControl()
     }
 
-    this.p.normalMaterial()
     this.p.rotateX(0.2);
     this.p.rotateY(-0.2);
 

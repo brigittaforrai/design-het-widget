@@ -3,24 +3,33 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
-    <title>design het</title>
+    <title>Design het</title>
+    <link rel="stylesheet" type="text/css" href="main.css">
 
-    <!-- add canvas-toBlob.js, fileSaver.js -->
+
+    <!-- include the folling scripts into your index.html -->
     <script src="https://cdn.rawgit.com/eligrey/canvas-toBlob.js/f1a01896135ab378aa5c0118eadd81da55e698d8/canvas-toBlob.js"></script>
 	  <script src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"></script>
-
     <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
-    <script src="widget/p5/p5.js"></script>
+    <script src="widget/p5/p5.min.js"></script>
     <script src="widget/design-het.js"></script>
     <script src="widget/design-het-interface.js"></script>
+    <!-- ________________________________________________ -->
 
-    <link rel="stylesheet" type="text/css" href="main.css">
+
+
   </head>
   <body>
     <img class="top" src="image.png"></img>
     <img class="bottom" src="image-bottom.png"></img>
 
+
+    <!-- Include design-het and design-het-interface components into your index.html file -->
+    <!-- use these styles -->
+    <!-- set your site's body position to relative -->
     <design-het style="width: 100%; height: 100%; position: fixed; left: 0; top: 0; z-index: -100;"></design-het>
     <design-het-interface></design-het-interface>
+    <!-- ______________________________________________ -->
+
   </body>
 </html>
