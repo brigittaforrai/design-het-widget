@@ -228,6 +228,7 @@ class Sketch {
     this.p.createCanvas(this.width, this.height, this.p.WEBGL)
     this.p.pixelDensity(4); // todo
     this.setOrtho()
+    this.p.frameRate(30)
 
     // move p5 default canvas inside widget
     this.canvas = document.querySelector('canvas')
@@ -246,7 +247,6 @@ class Sketch {
     if (this.fullscreen) {
       this.p.orbitControl()
     }
-
     this.p.rotateX(0.2);
     this.p.rotateY(-0.2);
 
@@ -276,25 +276,24 @@ class Sketch {
   drawGrid () { // TODO
     this.p.noStroke()
     this.p.fill(241, 67, 65)
+    this.p.background(200);
 
     this.p.translate(-this.width/2, this.height/2, 0)
+    this.p.rotateX(this.p.HALF_PI)
     let objpos = 0
     let a = this.theta
 
+    let z = 0;
     for(let x = 0; x<= this.xNodes; x++) {
       let yp = this.p.sin(a) * this.ampl
-      for(let z = 0; z<= this.yNodes; z++) {
-        this.p.push()
-        this.p.rotateX(this.p.HALF_PI)
+      this.p.translate(this.xgap, yp, z * -this.zgap)
+      for(z = 0; z<= this.yNodes; z++) {
         let xp = (x * this.xgap)
         let zp = (z * this.zgap)
 
-        this.p.translate(xp, yp, zp)
-        this.p.sphere(this.nodesize)
-        this.p.pop()
-        if(xp === 250 && zp === 250) {
-          this.selectedPosition = yp
-        }
+        this.p.translate(0, 0, this.zgap)
+        this.p.sphere(this.nodesize, 12, 8)
+
         a += this.dx
       }
     }
