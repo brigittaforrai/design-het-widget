@@ -276,25 +276,26 @@ class Sketch {
     this.p.fill(241, 67, 65)
 
     this.p.translate(-this.width/2, this.height/2, 0)
+    this.p.rotateX(this.p.HALF_PI)
     let objpos = 0
     let a = this.theta
 
+    let z = 0;
     for(let x = 0; x<= this.xNodes; x++) {
       let yp = this.p.sin(a) * this.ampl
-      for(let z = 0; z<= this.yNodes; z++) {
-        this.p.push()
-        this.p.rotateX(this.p.HALF_PI)
+      this.p.translate(this.xgap, yp, z * -this.zgap)
+      for(z = 0; z<= this.yNodes; z++) {
+
+        this.p.translate(0, 0, this.zgap)
+        this.p.sphere(this.nodesize, 48, 32) // todo
+
+        // todo
         let xp = (x * this.xgap)
         let zp = (z * this.zgap)
-
-        this.p.translate(xp, yp, zp)
-        this.p.sphere(this.nodesize, 36, 24)
-        this.p.pop()
-
-        // todo - ez itt nem jo
         if(xp === 250 && zp === 250) {
           this.selectedPosition = yp
         }
+
         a += this.dx
       }
     }
@@ -313,14 +314,13 @@ class Circle {
   create (p, position) {
     this.position = position
 
-    p.rotateX(p.PI/2)
     p.fill(241, 67, 65)
     p.stroke(255)
-    p.strokeWeight(1)
+    p.strokeWeight(2)
 
     for (let o = 0; o < 5; o++) {
       p.push()
-      p.translate(this.x + (o * 30), this.position, this.height - this.y)
+      p.translate(-1 * (this.width -(this.x + (o * 30))), this.position,(-1 * this.y))
       p.cylinder(30, 10)
       p.pop()
     }
