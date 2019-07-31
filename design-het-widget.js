@@ -89544,6 +89544,10 @@
 	  update (name, val) {
 	    if (this[name] !== val) {
 	      this[name] = parseFloat(val);
+	      if (name === 'xgap' || name === 'ygap') {
+	        this.xNodes = parseInt(this.width / this.xgap);
+	        this.yNodes = parseInt(this.height / this.zgap);
+	      }
 	    }
 	  }
 
