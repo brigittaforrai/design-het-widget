@@ -1,5 +1,7 @@
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
+import serve from 'rollup-plugin-serve'
+import livereload from 'rollup-plugin-livereload'
 
 export default {
   input: 'widget/index.js',
@@ -10,8 +12,10 @@ export default {
   plugins: [
     nodeResolve({
       jsnext: true,
-      main: true
+      main: true,
     }),
+    serve(),
+    livereload(),
 
     commonjs({
       // non-CommonJS modules will be ignored, but you can also

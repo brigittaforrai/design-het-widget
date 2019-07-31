@@ -284,7 +284,7 @@ class Sketch {
 
     let z = 0;
     for(let x = 0; x<= this.xNodes; x++) {
-      let yp = this.p.sin(a) * this.ampl
+      let yp = Math.sin(a) * this.ampl
       this.p.translate(this.xgap, yp, z * -this.zgap)
       for(z = 0; z<= this.yNodes; z++) {
 
