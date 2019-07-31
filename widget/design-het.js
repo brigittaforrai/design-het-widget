@@ -229,6 +229,7 @@ class Sketch {
     this.p.pixelDensity(4); // todo
     this.setOrtho()
     this.p.frameRate(30)
+    this.p.smooth()
 
     // move p5 default canvas inside widget
     this.canvas = document.querySelector('canvas')
@@ -287,7 +288,7 @@ class Sketch {
       for(z = 0; z<= this.yNodes; z++) {
 
         this.p.translate(0, 0, this.zgap)
-        this.p.sphere(this.nodesize, 48, 32) // todo
+        this.p.sphere(this.nodesize) // todo
 
         // todo
         let xp = (x * this.xgap)
