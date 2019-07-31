@@ -89401,156 +89401,42 @@
 	//# sourceMappingURL=FileSaver.min.js.map
 	});
 
-	const template = document.createElement('template');
-	  template.id = 'design-het-widget';
-	  template.innerHTML = `
-    <style>
-    .widget-container {
-      width: 100%;
-      height: 100%;
-      background-color: black;
-      }
-      canvas {
-      visibility: visible !important;
-      z-index: -1000;
-      background-color: rgba(0,0,0,0);
-      }
-      audio {
-        display: none;
-      }
-      .loader, .loader:before, .loader:after {
-        border-radius: 50%;
-        width: 2.5em;
-        height: 2.5em;
-        -webkit-animation-fill-mode: both;
-        animation-fill-mode: both;
-        -webkit-animation: load7 1.8s infinite ease-in-out;
-        animation: load7 1.8s infinite ease-in-out;
-      }
-      .loader {
-        color: #ff2836;
-        font-size: 10px;
-        margin: 80px auto;
-        position: absolute;
-        text-indent: -9999em;
-        -webkit-transform: translateZ(0);
-        -ms-transform: translateZ(0);
-        transform: translateZ(0);
-        -webkit-animation-delay: -0.16s;
-        animation-delay: -0.16s;
-        top: calc(50% - 40px);
-        left: calc(50% - 40px);
-        display: none;
-      }
-      .loader:before, .loader:after {
-        content: '';
-        position: absolute;
-        top: 0;
-      }
-      .loader:before {
-        left: -3.5em;
-        -webkit-animation-delay: -0.32s;
-        animation-delay: -0.32s;
-      }
-      .loader:after {
-        left: 3.5em;
-      }
-      @-webkit-keyframes load7 {
-        0%, 80%, 100% {
-          box-shadow: 0 2.5em 0 -1.3em;
-        }
-        40% {
-          box-shadow: 0 2.5em 0 0;
-        }
-      }
-      @keyframes load7 {
-        0%, 80%, 100% {
-          box-shadow: 0 2.5em 0 -1.3em;
-        }
-        40% {
-          box-shadow: 0 2.5em 0 0;
-        }
-      }
-    </style>
-    <div class="widget-container">
-      <div class="loader">Downloading image ...</div>
-      <audio id="audio" controls autoplay loop>
-        <source src="widget/music.mp3" type="audio/mpeg">
-        <p>Your browser doesn't support HTML5 audio. Here is
-      </audio>
-    </div>
-  `;
+	class Circle2 {
+	  constructor (p, width, height) {
+	    this.position = null;
+	    this.width = width;
+	    this.height = height;
+	    this.p = p;
+	  }
 
-	  const inputAttrs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period'];
-	  const attrs = ['saveas', 'stop', 'fullscreen', 'mute'];
+	  draw (position) {
+	    this.p.fill(249, 66, 58);
+	    this.p.stroke(255);
+	    this.p.strokeWeight(2);
 
-	  class DesignHet extends HTMLElement {
-	    constructor() {
-	      super();
-	      this.attachShadow({mode: 'open'});
-	      this.shadowRoot.appendChild(template.content.cloneNode(true));
+	    const width = 40;
+	    const height = 3;
 
-	      this.sketch = null;
-	      this.width = window.innerWidth;
-	      this.height = window.innerHeight;
-	    }
-
-	    connectedCallback () {
-	      this.sketch = new Sketch(this.width, this.height, this.shadowRoot);
-	      new p5$1(this.sketch.setupP5);
-
-	      // todo use p5 ?
-	      const musicPlay = () => {
-	        this.audio = this.shadowRoot.getElementById('audio');
-	        console.log(this.audio, 'a');
-	        this.audio.play();
-	        document.removeEventListener('click', musicPlay);
-	        document.removeEventListener('scroll', musicPlay);
-	      };
-	      document.addEventListener('click', musicPlay);
-	      document.addEventListener('scroll', musicPlay);
-	    }
-
-	    static get observedAttributes() {
-	      return inputAttrs.concat(attrs)
-	    }
-
-	    attributeChangedCallback (attrName, oldval, newVal) {
-	      if (attrName === 'saveas' && newVal) {
-	        this.sketch.save(newVal);
-	      }
-	      if (attrName === 'stop' && newVal) {
-	        this.sketch.stop();
-	      }
-
-	      if (attrName === 'fullscreen') {
-	        this.sketch.setFullscreen(newVal);
-	      }
-
-	      if ((attrName === 'mute') && this.audio) {
-	        if (newVal === 'true') {
-	          this.audio.pause();
-	        } else if (newVal === 'false') {
-	          this.audio.play();
-	        }
-	      }
-
-	      if (inputAttrs.indexOf(attrName) >= 0) {
-	        this.sketch.update(attrName, newVal);
-	      }
+	    for (let o = 0; o < 8; o++) {
+	      this.p.push();
+	      this.p.translate(o*(width/3), position - (o*height/2), 0);
+	      this.p.cylinder(width, height);
+	      this.p.pop();
 	    }
 	  }
-	  window.customElements.define('design-het', DesignHet);
-
+	}
 
 	class Sketch {
 	  constructor (width, height, shadowRoot, toSave) {
 	    this.width = width;
 	    this.height = height;
 	    this.shadowRoot = shadowRoot;
-	    this.selectedPosition = null;
 	    this.fullscreen = false;
 	    this.background ='rgba(0, 0, 0, 1)';
+
+	    // todo rename these
+	    this.randomDots = [];
+	    this.circles = [];
 
 	    this.dx = null;
 	    this.xNodes = null;
@@ -89587,9 +89473,13 @@
 	  }
 
 	  doubleClicked () {
-	    const x = this.p.mouseX;
-	    const y = this.p.mouseY;
-	    this.circle = new Circle(this.width, this.height, x, y);
+	    if (this.circles.length < 3) {
+	      const x = Math.round(Math.random() * this.xNodes);
+	      const y = Math.round(Math.random() * this.yNodes);
+
+	      this.randomDots.push({x: x, y: y});
+	      this.circles.push(new Circle2(this.p, this.width, this.height));
+	    }
 	  }
 
 	  setFullscreen (val) {
@@ -89651,11 +89541,6 @@
 	    this.theta += this.tempo;
 
 	    this.drawGrid();
-
-	    // todo more circles
-	    if (this.circle) {
-	      this.circle.create(this.p, this.selectedPosition);
-	    }
 	  }
 
 	  update (name, val) {
@@ -89674,27 +89559,34 @@
 	  }
 
 	  drawGrid () {
-	    this.p.noStroke();
-	    this.p.fill(249, 66, 58);
 
 	    this.p.translate(-this.width/2, this.height/2, 0);
 	    this.p.rotateX(this.p.HALF_PI);
 	    let a = this.theta;
-
 	    let z = 0;
+
 	    for(let x = 0; x<= this.xNodes; x++) {
-	      let yp = Math.sin(a) * this.ampl;
+	      const yp = Math.sin(a) * this.ampl;
 	      this.p.translate(this.xgap, yp, z * -this.zgap);
+
 	      for(z = 0; z<= this.yNodes; z++) {
-
+	        let isCircle = false;
 	        this.p.translate(0, 0, this.zgap);
-	        this.p.sphere(this.nodesize);
 
-	        // todo
-	        let xp = (x * this.xgap);
-	        let zp = (z * this.zgap);
-	        if(xp === 250 && zp === 250) {
-	          this.selectedPosition = yp;
+	        // circle
+	        if (this.randomDots.length) {
+	          for(let d = 0; d < this.randomDots.length; d++) {
+	            if (this.randomDots[d].x === x && this.randomDots[d].y === z) {
+	              this.circles[d].draw(yp);
+	              isCircle = true;
+	            }
+	          }
+	        }
+
+	        if (!isCircle) {
+	          this.p.noStroke();
+	          this.p.fill(249, 66, 58);
+	          this.p.sphere(this.nodesize);
 	        }
 
 	        a += this.dx;
@@ -89703,30 +89595,149 @@
 	  }
 	}
 
-	class Circle {
-	  constructor (width, height, x, y) {
-	    this.position = null;
-	    this.width = width;
-	    this.height = height;
-	    this.x = x;
-	    this.y = y;
+	const template = document.createElement('template');
+	template.id = 'design-het-widget';
+
+	template.innerHTML = `
+  <style>
+  .widget-container {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    }
+    canvas {
+    visibility: visible !important;
+    z-index: -1000;
+    background-color: rgba(0,0,0,0);
+    }
+    audio {
+      display: none;
+    }
+    .loader, .loader:before, .loader:after {
+      border-radius: 50%;
+      width: 2.5em;
+      height: 2.5em;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+      -webkit-animation: load7 1.8s infinite ease-in-out;
+      animation: load7 1.8s infinite ease-in-out;
+    }
+    .loader {
+      color: #ff2836;
+      font-size: 10px;
+      margin: 80px auto;
+      position: absolute;
+      text-indent: -9999em;
+      -webkit-transform: translateZ(0);
+      -ms-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-animation-delay: -0.16s;
+      animation-delay: -0.16s;
+      top: calc(50% - 40px);
+      left: calc(50% - 40px);
+      display: none;
+    }
+    .loader:before, .loader:after {
+      content: '';
+      position: absolute;
+      top: 0;
+    }
+    .loader:before {
+      left: -3.5em;
+      -webkit-animation-delay: -0.32s;
+      animation-delay: -0.32s;
+    }
+    .loader:after {
+      left: 3.5em;
+    }
+    @-webkit-keyframes load7 {
+      0%, 80%, 100% {
+        box-shadow: 0 2.5em 0 -1.3em;
+      }
+      40% {
+        box-shadow: 0 2.5em 0 0;
+      }
+    }
+    @keyframes load7 {
+      0%, 80%, 100% {
+        box-shadow: 0 2.5em 0 -1.3em;
+      }
+      40% {
+        box-shadow: 0 2.5em 0 0;
+      }
+    }
+  </style>
+
+  <div class="widget-container">
+    <div class="loader">Downloading image ...</div>
+    <audio id="audio" controls autoplay loop>
+      <!-- TODO MUSIC: location + preload-->
+      <source src="widget/music.mp3" type="audio/mpeg">
+      <p>Your browser doesn't support HTML5 audio. Here is
+    </audio>
+  </div>
+`;
+
+	const inputAttrs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period'];
+	const attrs = ['saveas', 'stop', 'fullscreen', 'mute'];
+
+	class DesignHet extends HTMLElement {
+	  constructor() {
+	    super();
+	    this.attachShadow({mode: 'open'});
+	    this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+	    this.sketch = null;
+	    this.width = window.innerWidth;
+	    this.height = window.innerHeight;
 	  }
 
-	  create (p, position) {
-	    this.position = position;
+	  connectedCallback () {
+	    this.sketch = new Sketch(this.width, this.height, this.shadowRoot);
+	    new p5$1(this.sketch.setupP5);
 
-	    p.fill(249, 66, 58);
-	    p.stroke(255);
-	    p.strokeWeight(2);
+	    // todo use p5 ?
+	    const musicPlay = () => {
+	      this.audio = this.shadowRoot.getElementById('audio');
+	      this.audio.play();
+	      document.removeEventListener('click', musicPlay);
+	      document.removeEventListener('scroll', musicPlay);
+	    };
+	    document.addEventListener('click', musicPlay);
+	    document.addEventListener('scroll', musicPlay);
+	  }
 
-	    for (let o = 0; o < 5; o++) {
-	      p.push();
-	      p.translate(-1 * (this.width -(this.x + (o * 30))), this.position,(-1 * this.y));
-	      p.cylinder(30, 10);
-	      p.pop();
+	  static get observedAttributes() {
+	    return inputAttrs.concat(attrs)
+	  }
+
+	  attributeChangedCallback (attrName, oldval, newVal) {
+	    if (attrName === 'saveas' && newVal) {
+	      this.sketch.save(newVal);
+	    }
+	    if (attrName === 'stop' && newVal) {
+	      this.sketch.stop();
+	    }
+
+	    if (attrName === 'fullscreen') {
+	      this.sketch.setFullscreen(newVal);
+	    }
+
+	    if ((attrName === 'mute') && this.audio) {
+	      if (newVal === 'true') {
+	        this.audio.pause();
+	      } else if (newVal === 'false') {
+	        this.audio.play();
+	      }
+	    }
+
+	    if (inputAttrs.indexOf(attrName) >= 0) {
+	      this.sketch.update(attrName, newVal);
 	    }
 	  }
 	}
+
+	window.customElements.define('design-het', DesignHet);
 
 	const template$1 = document.createElement('template');
 	  template$1.id = 'design-het-interface';
