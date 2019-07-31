@@ -8,9 +8,6 @@
       width: 100%;
       height: 100%;
       background-color: black;
-      /* display: flex;
-      justify-content: center;
-      align-items: center; */
       }
       canvas {
       visibility: visible !important;
@@ -20,9 +17,7 @@
       audio {
         display: none;
       }
-      .loader,
-      .loader:before,
-      .loader:after {
+      .loader, .loader:before, .loader:after {
         border-radius: 50%;
         width: 2.5em;
         height: 2.5em;
@@ -46,8 +41,7 @@
         left: calc(50% - 40px);
         display: none;
       }
-      .loader:before,
-      .loader:after {
+      .loader:before, .loader:after {
         content: '';
         position: absolute;
         top: 0;
@@ -61,9 +55,7 @@
         left: 3.5em;
       }
       @-webkit-keyframes load7 {
-        0%,
-        80%,
-        100% {
+        0%, 80%, 100% {
           box-shadow: 0 2.5em 0 -1.3em;
         }
         40% {
@@ -71,9 +63,7 @@
         }
       }
       @keyframes load7 {
-        0%,
-        80%,
-        100% {
+        0%, 80%, 100% {
           box-shadow: 0 2.5em 0 -1.3em;
         }
         40% {
@@ -111,6 +101,7 @@
       // todo use p5 ?
       const musicPlay = () => {
         this.audio = this.shadowRoot.getElementById('audio')
+        console.log(this.audio, 'a');
         this.audio.play()
         document.removeEventListener('click', musicPlay)
         document.removeEventListener('scroll', musicPlay)
@@ -192,6 +183,13 @@ class Sketch {
     p.setup = () => { this.setup() }
     p.draw = () => { this.draw() }
     p.windowResized = () => { this.windowResized() }
+    p.doubleClicked = () => {this.doubleClicked()}
+  }
+
+  doubleClicked () {
+    const x = this.p.mouseX
+    const y = this.p.mouseY
+    this.circle = new Circle(this.width, this.height, x, y)
   }
 
   setFullscreen (val) {
@@ -224,6 +222,8 @@ class Sketch {
   }
 
   setup () {
+    this.xNodes = parseInt(this.width / this.xgap)
+    this.yNodes = parseInt(this.height / this.zgap)
     this.p.noCanvas()
     this.p.createCanvas(this.width, this.height, this.p.WEBGL)
     this.p.pixelDensity(4); // todo
@@ -234,30 +234,25 @@ class Sketch {
     this.canvas.parentNode.removeChild(this.canvas)
     const widget = this.shadowRoot.querySelector('.widget-container')
     widget.appendChild(this.canvas)
-
-    // this.circle = new Circle(this.ampl, this.width, this.height)
   }
 
   draw () {
     this.p.clear()
     this.p.background(this.background)
 
-
     if (this.fullscreen) {
       this.p.orbitControl()
     }
 
-    this.p.rotateX(0.2);
-    this.p.rotateY(-0.2);
-
-    this.xNodes = parseInt(this.width / this.xgap)
-    this.yNodes = parseInt(this.height / this.zgap)
     this.dx = (this.p.TWO_PI / this.period) * this.spacing
     this.theta += this.tempo
 
     this.drawGrid()
-    // todo temp hide
-    // this.circle.create(this, this.camera, this.selectedPosition)
+
+    // todo more circles
+    if (this.circle) {
+      this.circle.create(this.p, this.selectedPosition)
+    }
   }
 
   update (name, val) {
@@ -269,11 +264,13 @@ class Sketch {
   windowResized() {
     this.width = this.p.windowWidth
     this.height = this.p.windowHeight
+    this.xNodes = parseInt(this.width / this.xgap)
+    this.yNodes = parseInt(this.height / this.zgap)
     this.p.resizeCanvas(this.width, this.height)
     this.setOrtho()
   }
 
-  drawGrid () { // TODO
+  drawGrid () {
     this.p.noStroke()
     this.p.fill(241, 67, 65)
 
@@ -292,6 +289,8 @@ class Sketch {
         this.p.translate(xp, yp, zp)
         this.p.sphere(this.nodesize)
         this.p.pop()
+
+        // todo - ez itt nem jo
         if(xp === 250 && zp === 250) {
           this.selectedPosition = yp
         }
@@ -302,93 +301,27 @@ class Sketch {
 }
 
 class Circle {
-  constructor (ampl, width, height) {
+  constructor (width, height, x, y) {
     this.position = null
     this.width = width
     this.height = height
-    this.ampl = ampl
+    this.x = x
+    this.y = y
   }
 
-  create (p, cam, position) {
+  create (p, position) {
     this.position = position
-    let dRadius = 0
-
-    let camTheta
-    let camPhi
-
-    // todo kor rotation nem jo
-    // if (cam.deltaPhi && cam.deltaTheta) {
-    //   let dTheta = cam.deltaTheta
-    //   let dPhi = cam.deltaPhi
-    //   var diffX = cam.cam.eyeX - cam.cam.centerX;
-    //   var diffY = cam.cam.eyeY - cam.cam.centerY;
-    //   var diffZ = cam.cam.eyeZ - cam.cam.centerZ;
-    //
-    //   // get spherical coorinates for current camera position about origin
-    //   var camRadius = Math.sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
-    //   // from https://github.com/mrdoob/three.js/blob/dev/src/math/Spherical.js#L72-L73
-    //   camTheta = Math.atan2(diffX, diffZ); // equatorial angle
-    //   camPhi = Math.acos(Math.max(-1, Math.min(1, diffY / camRadius))); // polar angle
-    //
-    //   // add change
-    //   camTheta += dTheta;
-    //   camPhi += dPhi;
-    //   camRadius += dRadius;
-    // }
 
     p.rotateX(p.PI/2)
     p.fill(241, 67, 65)
     p.stroke(255)
-    p.strokeWeight(2)
+    p.strokeWeight(1)
 
-
-    let x = this.width / 2
-    let y = this.height / 3
-
-    for (let o = 0; o < 15; o++) {
+    for (let o = 0; o < 5; o++) {
       p.push()
-
-      p.translate(0, this.ampl + 10 + o, this.position)
-      if (camPhi) p.rotateX(-camPhi)
-      p.rotateX(p.PI/2)
-      if (camTheta) p.rotateZ(-camTheta )
-      p.ellipse(x + o*15, y, 120, 120);
+      p.translate(this.x + (o * 30), this.position, this.height - this.y)
+      p.cylinder(30, 10)
       p.pop()
     }
-  }
-}
-
-let deltaPhi = 0
-let deltaTheta = 0
-
-function myOrbit () {
-  const sensitivityX = 1
-  const sensitivityY = 1
-  const cam = this._renderer._curCamera;
-  this.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2);
-
-  const mouseInCanvas =
-    this.mouseX < this.width &&
-    this.mouseX > 0 &&
-    this.mouseY < this.height &&
-    this.mouseY > 0;
-  if (!mouseInCanvas) {
-    return cam
-  };
-
-  const scaleFactor = this.height < this.width ? this.height : this.width;
-
-  if (this.mouseIsPressed) {
-    if (this.mouseButton === this.LEFT) {
-      deltaTheta =
-        -sensitivityX * (this.mouseX - thismouseX) / scaleFactor;
-      deltaPhi = sensitivityY * (this.mouseY - thismouseY) / scaleFactor;
-      this._renderer._curCamera._orbit(deltaTheta, deltaPhi, 0);
-    }
-  }
-  return {
-    cam: cam,
-    deltaTheta: deltaTheta,
-    deltaPhi: deltaPhi
   }
 }
