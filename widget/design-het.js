@@ -1,5 +1,4 @@
 import p5 from 'p5'
-import FileSaver from 'file-saver'
 import Sketch from './sketch.js'
 
 const template = document.createElement('template')
@@ -100,6 +99,7 @@ export default class DesignHet extends HTMLElement {
   }
 
   connectedCallback () {
+    console.log('Interactive content: brigittaforrai.com');
     this.sketch = new Sketch(this.width, this.height, this.shadowRoot)
     new p5(this.sketch.setupP5);
 
