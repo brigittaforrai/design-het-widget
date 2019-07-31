@@ -121,7 +121,7 @@ export default class Sketch {
   update (name, val) {
     if (this[name] !== val) {
       this[name] = parseFloat(val)
-      if (name === 'xgap' || name === 'ygap') {
+      if (name === 'xgap' || name === 'zgap') {
         this.xNodes = parseInt(this.width / this.xgap)
         this.yNodes = parseInt(this.height / this.zgap)
       }
