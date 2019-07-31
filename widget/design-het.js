@@ -1,4 +1,5 @@
-(function () {
+import p5 from 'p5'
+import FileSaver from 'file-saver'
 
   const template = document.createElement('template')
   template.id = 'design-het-widget'
@@ -83,7 +84,7 @@
   const inputAttrs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
   const attrs = ['saveas', 'stop', 'fullscreen', 'mute']
 
-  class DesignHet extends HTMLElement {
+  export default class DesignHet extends HTMLElement {
     constructor() {
       super()
       this.attachShadow({mode: 'open'})
@@ -140,7 +141,6 @@
     }
   }
   window.customElements.define('design-het', DesignHet);
-})()
 
 
 class Sketch {
@@ -208,12 +208,12 @@ class Sketch {
     this.p.redraw()
 
     this.canvas.toBlob((blob) => {
-      saveAs(blob, 'design-het.png');
+      FileSaver.saveAs(blob, 'design-het.png');
       this.p.resizeCanvas(this.width, this.height, true)
       this.setOrtho()
-      this.play()
       this.canvas.style.display = 'block'
       this.loader.style.display = 'none'
+      this.play()
     })
   }
 
@@ -229,7 +229,8 @@ class Sketch {
     this.p.pixelDensity(4); // todo
     this.setOrtho()
     this.p.frameRate(30)
-    this.p.smooth()
+    // this.p.setAttributes('antialias', true);
+    // this.p.smooth()
 
     // move p5 default canvas inside widget
     this.canvas = document.querySelector('canvas')
@@ -288,7 +289,7 @@ class Sketch {
       for(z = 0; z<= this.yNodes; z++) {
 
         this.p.translate(0, 0, this.zgap)
-        this.p.sphere(this.nodesize) // todo
+        this.p.sphere(this.nodesize)
 
         // todo
         let xp = (x * this.xgap)

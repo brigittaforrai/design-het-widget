@@ -1,4 +1,4 @@
-(function () {
+
 
   const template = document.createElement('template')
   template.id = 'design-het-interface'
@@ -119,7 +119,7 @@
     period: 'period'
   }
 
-  class DesignHetInterface extends HTMLElement {
+  export default class DesignHetInterface extends HTMLElement {
     constructor() {
       super()
       this.attachShadow({mode: 'open'});
@@ -232,4 +232,3 @@
     }
   }
   window.customElements.define('design-het-interface', DesignHetInterface);
-})()
