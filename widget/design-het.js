@@ -200,7 +200,7 @@ class Sketch {
     this.canvas.style.display = 'none'
     this.loader.style.display = 'block'
     const aspect = this.width / this.height
-    const width = 4961
+    const width = 4000
     const height = Math.round(width / aspect)
     this.background = 'rgba(0, 0, 0, 0)'
     this.p.resizeCanvas(width, height, true)
@@ -228,6 +228,7 @@ class Sketch {
     this.p.createCanvas(this.width, this.height, this.p.WEBGL)
     this.p.pixelDensity(4); // todo
     this.setOrtho()
+    this.p.frameRate(30)
 
     // move p5 default canvas inside widget
     this.canvas = document.querySelector('canvas')
@@ -287,7 +288,7 @@ class Sketch {
         let zp = (z * this.zgap)
 
         this.p.translate(xp, yp, zp)
-        this.p.sphere(this.nodesize)
+        this.p.sphere(this.nodesize, 36, 24)
         this.p.pop()
 
         // todo - ez itt nem jo
