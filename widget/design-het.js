@@ -273,7 +273,7 @@ class Sketch {
 
   drawGrid () {
     this.p.noStroke()
-    this.p.fill(241, 67, 65)
+    this.p.fill(249, 66, 58)
 
     this.p.translate(-this.width/2, this.height/2, 0)
     this.p.rotateX(this.p.HALF_PI)
@@ -314,7 +314,7 @@ class Circle {
   create (p, position) {
     this.position = position
 
-    p.fill(241, 67, 65)
+    p.fill(249, 66, 58)
     p.stroke(255)
     p.strokeWeight(2)
 
