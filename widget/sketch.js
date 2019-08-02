@@ -1,5 +1,9 @@
 import { Circle, Circle2 } from './circle.js'
 import FileSaver from 'file-saver'
+import toBlob from 'canvas-toBlob'
+
+
+console.log(toBlob, 'blob');
 
 export default class Sketch {
   constructor (width, height, shadowRoot, toSave) {
