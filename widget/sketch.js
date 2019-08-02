@@ -67,7 +67,7 @@ export default class Sketch {
     this.canvas.style.display = 'none'
     this.loader.style.display = 'block'
     const aspect = this.width / this.height
-    const width = retina ? 2000 : 4000
+    const width = retina ? 1000 : 4000
     const height = Math.round(width / aspect)
     // 16777216
     console.log(width, height);
