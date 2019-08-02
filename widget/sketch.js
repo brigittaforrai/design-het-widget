@@ -29,7 +29,6 @@ export default class Sketch {
     this.setupP5 = this.setupP5.bind(this)
 
     this.loader = this.shadowRoot.querySelector('.loader')
-    toBlob.init()
   }
 
   stop() {
@@ -70,14 +69,20 @@ export default class Sketch {
     const aspect = this.width / this.height
     const width = retina ? 2000 : 4000
     const height = Math.round(width / aspect)
+    // 16777216
+    console.log(width, height);
+    console.log(width * height, 'w*h');
     this.background = 'rgba(0, 0, 0, 0)'
     this.p.resizeCanvas(width, height, true)
     this.setOrtho()
     this.p.redraw()
 
+    console.log(this.canvas, 'canvas');
+    console.log(this.canvas.toBlob);
+
     if (toBlob.supported) {
       this.canvas.toBlob((blob) => {
-        console.log(blob.size);
+        console.log(blob, blob.size, blob);
         FileSaver.saveAs(blob, 'design-het.png');
         this.p.resizeCanvas(this.width, this.height, true)
         this.setOrtho()

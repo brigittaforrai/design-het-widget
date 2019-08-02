@@ -1,5 +1,6 @@
 import p5 from 'p5'
 import Sketch from './sketch.js'
+import toBlob from 'canvas-to-blob'
 
 const template = document.createElement('template')
 template.id = 'design-het-widget'
@@ -100,6 +101,7 @@ export default class DesignHet extends HTMLElement {
 
   connectedCallback () {
     console.log('Interactive content: brigittaforrai.com');
+    toBlob.init()
     this.sketch = new Sketch(this.width, this.height, this.shadowRoot)
     new p5(this.sketch.setupP5);
 
