@@ -1,9 +1,6 @@
 import { Circle, Circle2 } from './circle.js'
 import FileSaver from 'file-saver'
-import toBlob from 'canvas-toBlob'
-
-
-console.log(toBlob, 'blob');
+import toBlob from 'canvas-to-blob'
 
 export default class Sketch {
   constructor (width, height, shadowRoot, toSave) {
@@ -32,6 +29,7 @@ export default class Sketch {
     this.setupP5 = this.setupP5.bind(this)
 
     this.loader = this.shadowRoot.querySelector('.loader')
+    toBlob.init()
   }
 
   stop() {
@@ -76,14 +74,18 @@ export default class Sketch {
     this.setOrtho()
     this.p.redraw()
 
-    this.canvas.toBlob((blob) => {
-      FileSaver.saveAs(blob, 'design-het.png');
-      this.p.resizeCanvas(this.width, this.height, true)
-      this.setOrtho()
-      this.canvas.style.display = 'block'
-      this.loader.style.display = 'none'
-      this.play()
-    })
+    console.log(toBlob.supported);
+
+    if (toBlob.supported) {
+      this.canvas.toBlob((blob) => {
+        FileSaver.saveAs(blob, 'design-het.png');
+        this.p.resizeCanvas(this.width, this.height, true)
+        this.setOrtho()
+        this.canvas.style.display = 'block'
+        this.loader.style.display = 'none'
+        this.play()
+      })
+    }
   }
 
   setOrtho () {
