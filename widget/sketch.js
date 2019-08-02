@@ -64,20 +64,20 @@ export default class Sketch {
   }
 
   save() {
+    const retina = window.devicePixelRatio > 1;
     this.canvas.style.display = 'none'
     this.loader.style.display = 'block'
     const aspect = this.width / this.height
-    const width = 4000
+    const width = retina ? 2000 : 4000
     const height = Math.round(width / aspect)
     this.background = 'rgba(0, 0, 0, 0)'
     this.p.resizeCanvas(width, height, true)
     this.setOrtho()
     this.p.redraw()
 
-    console.log(toBlob.supported);
-
     if (toBlob.supported) {
       this.canvas.toBlob((blob) => {
+        console.log(blob.size);
         FileSaver.saveAs(blob, 'design-het.png');
         this.p.resizeCanvas(this.width, this.height, true)
         this.setOrtho()

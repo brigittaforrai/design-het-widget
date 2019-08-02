@@ -10,10 +10,6 @@ export default {
     format: 'iife'
   },
   plugins: [
-    nodeResolve({
-      jsnext: true,
-      main: true,
-    }),
     serve(),
     // livereload(),
 
