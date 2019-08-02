@@ -82,7 +82,7 @@ export default class Sketch {
 
     if (toBlob.supported) {
       this.canvas.toBlob((blob) => {
-        console.log(blob, blob.size, blob);
+        console.log(blob);
         FileSaver.saveAs(blob, 'design-het.png');
         this.p.resizeCanvas(this.width, this.height, true)
         this.setOrtho()

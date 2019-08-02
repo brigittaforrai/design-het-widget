@@ -89549,7 +89549,7 @@
 
 	    if (canvasToBlob.supported) {
 	      this.canvas.toBlob((blob) => {
-	        console.log(blob, blob.size, blob);
+	        console.log(blob);
 	        FileSaver_min.saveAs(blob, 'design-het.png');
 	        this.p.resizeCanvas(this.width, this.height, true);
 	        this.setOrtho();
