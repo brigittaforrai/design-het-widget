@@ -15,7 +15,7 @@ export default {
       main: true,
     }),
     serve(),
-    // livereload(),
+    livereload(),
 
     commonjs({
       // non-CommonJS modules will be ignored, but you can also

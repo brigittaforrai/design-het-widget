@@ -20,6 +20,16 @@ template.innerHTML = `
     audio {
       display: none;
     }
+    svg {
+      width: 100vw;
+      height: 100vh;
+      display: inline-block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      /* todo */
+      /* z-index: 1000; */
+    }
     .loader, .loader:before, .loader:after {
       border-radius: 50%;
       width: 2.5em;
@@ -78,7 +88,6 @@ template.innerHTML = `
   <div class="widget-container">
     <div class="loader">Downloading image ...</div>
     <audio id="audio" controls autoplay loop>
-      <!-- TODO MUSIC: location + preload-->
       <source src="widget/music.mp3" type="audio/mpeg">
       <p>Your browser doesn't support HTML5 audio. Here is
     </audio>
@@ -100,12 +109,16 @@ export default class DesignHet extends HTMLElement {
   }
 
   connectedCallback () {
-    console.log('Interactive content: brigittaforrai.com');
+    console.log('Interactive content: brigittaforrai.com')
+
     toBlob.init()
-    this.sketch = new Sketch(this.width, this.height, this.shadowRoot)
+    const randomR = Math.random() * 100 + 20
+    const randomY = Math.random() * (this.height - 4 * randomR) + 2 * randomR
+    this.svg = this.createSvg(randomY, randomR)
+    this.sketch = new Sketch(this.width, this.height, this.shadowRoot, this.svg, randomY)
     new p5(this.sketch.setupP5);
 
-    // todo use p5 ?
+    // todo preload ?
     const musicPlay = () => {
       this.audio = this.shadowRoot.getElementById('audio')
       this.audio.play()
@@ -118,6 +131,28 @@ export default class DesignHet extends HTMLElement {
 
   static get observedAttributes() {
     return inputAttrs.concat(attrs)
+  }
+
+  createSvg (randomY, randomR) {
+    const svg = createElement('svg', {id: 'circle'})
+    const randomX = Math.random() * (this.width - 4 * randomR) + 2 * randomR
+    const distance = 15
+
+    for (let i = 0; i < 8; i++) {
+      const circle = createElement('circle', {
+        cx: randomX + i * distance,
+        cy: randomY,
+        r: randomR,
+        fill: '#ff2836',
+        stroke: 'white',
+        strokeWidth: 2,
+        name: 'circle'
+      })
+      svg.appendChild(circle)
+    }
+
+    this.shadowRoot.appendChild(svg)
+    return svg
   }
 
   attributeChangedCallback (attrName, oldval, newVal) {
@@ -144,6 +179,18 @@ export default class DesignHet extends HTMLElement {
       this.sketch.update(attrName, newVal)
     }
   }
+}
+
+function createElement(name, attributes) {
+  const ns = "http://www.w3.org/2000/svg"
+  let elem = document.createElementNS(ns, name)
+  if (attributes) {
+    Object.keys(attributes).forEach((i) => {
+      const key = i.split(/(?=[A-Z])/).join('-')
+      elem.setAttribute(key.toLowerCase(), attributes[i])
+    })
+  }
+  return elem
 }
 
 window.customElements.define('design-het', DesignHet);
