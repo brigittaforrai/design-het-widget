@@ -89816,7 +89816,7 @@
       this.p.translate((this.xgap / 2 + this.nodesize / 2) * -1, 0, 0);
 
       this.drawGrid();
-      this.moveSvg();
+      // this.moveSvg() // todo
     }
 
     moveSvg() {
@@ -90097,7 +90097,7 @@
       canvasToBlob.init();
       const randomR = Math.random() * 100 + 20;
       const randomY = Math.random() * (this.height - 4 * randomR) + 2 * randomR;
-      this.svg = this.createSvg(randomY, randomR);
+      // this.svg = this.createSvg(randomY, randomR) // todo
       this.sketch = new Sketch(this.width, this.height, this.shadowRoot, this.svg, randomY);
       new p5$1(this.sketch.setupP5);
 

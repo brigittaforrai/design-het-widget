@@ -74,7 +74,7 @@ export default class Sketch {
     this.p.translate((this.xgap / 2 + this.nodesize / 2) * -1, 0, 0)
 
     this.drawGrid()
-    this.moveSvg()
+    // this.moveSvg() // todo
   }
 
   moveSvg() {
