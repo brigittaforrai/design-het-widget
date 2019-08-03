@@ -1,5 +1,3 @@
-
-(function(l, i, v, e) { v = l.createElement(i); v.async = 1; v.src = '//' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; e = l.getElementsByTagName(i)[0]; e.parentNode.insertBefore(v, e)})(document, 'script');
 (function () {
   'use strict';
 
@@ -89628,36 +89626,123 @@
 
   var p5$1 = unwrapExports(p5);
 
-  class Circle2 {
-    constructor (p, width, height) {
-      this.position = null;
-      this.width = width;
-      this.height = height;
-      this.p = p;
-    }
-
-    draw (position) {
-      this.p.fill(249, 66, 58);
-      this.p.stroke(255);
-      this.p.strokeWeight(2);
-
-      const width = 40;
-      const height = 3;
-
-      for (let o = 0; o < 8; o++) {
-        this.p.push();
-        this.p.translate(o*(width/3), position - (o*height/2), 0);
-        this.p.cylinder(width, height);
-        this.p.pop();
-      }
-    }
-  }
-
   var FileSaver_min = createCommonjsModule(function (module, exports) {
   (function(a,b){b();})(commonjsGlobal,function(){function b(a,b){return "undefined"==typeof b?b={autoBom:!1}:"object"!=typeof b&&(console.warn("Deprecated: Expected third argument to be a object"),b={autoBom:!b}),b.autoBom&&/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(a.type)?new Blob(["\uFEFF",a],{type:a.type}):a}function c(b,c,d){var e=new XMLHttpRequest;e.open("GET",b),e.responseType="blob",e.onload=function(){a(e.response,c,d);},e.onerror=function(){console.error("could not download file");},e.send();}function d(a){var b=new XMLHttpRequest;b.open("HEAD",a,!1);try{b.send();}catch(a){}return 200<=b.status&&299>=b.status}function e(a){try{a.dispatchEvent(new MouseEvent("click"));}catch(c){var b=document.createEvent("MouseEvents");b.initMouseEvent("click",!0,!0,window,0,0,0,80,20,!1,!1,!1,!1,0,null),a.dispatchEvent(b);}}var f="object"==typeof window&&window.window===window?window:"object"==typeof self&&self.self===self?self:"object"==typeof commonjsGlobal&&commonjsGlobal.global===commonjsGlobal?commonjsGlobal:void 0,a=f.saveAs||("object"!=typeof window||window!==f?function(){}:"download"in HTMLAnchorElement.prototype?function(b,g,h){var i=f.URL||f.webkitURL,j=document.createElement("a");g=g||b.name||"download",j.download=g,j.rel="noopener","string"==typeof b?(j.href=b,j.origin===location.origin?e(j):d(j.href)?c(b,g,h):e(j,j.target="_blank")):(j.href=i.createObjectURL(b),setTimeout(function(){i.revokeObjectURL(j.href);},4E4),setTimeout(function(){e(j);},0));}:"msSaveOrOpenBlob"in navigator?function(f,g,h){if(g=g||f.name||"download","string"!=typeof f)navigator.msSaveOrOpenBlob(b(f,h),g);else if(d(f))c(f,g,h);else{var i=document.createElement("a");i.href=f,i.target="_blank",setTimeout(function(){e(i);});}}:function(a,b,d,e){if(e=e||open("","_blank"),e&&(e.document.title=e.document.body.innerText="downloading..."),"string"==typeof a)return c(a,b,d);var g="application/octet-stream"===a.type,h=/constructor/i.test(f.HTMLElement)||f.safari,i=/CriOS\/[\d]+/.test(navigator.userAgent);if((i||g&&h)&&"object"==typeof FileReader){var j=new FileReader;j.onloadend=function(){var a=j.result;a=i?a:a.replace(/^data:[^;]*;/,"data:attachment/file;"),e?e.location.href=a:location=a,e=null;},j.readAsDataURL(a);}else{var k=f.URL||f.webkitURL,l=k.createObjectURL(a);e?e.location=l:location.href=l,e=null,setTimeout(function(){k.revokeObjectURL(l);},4E4);}});f.saveAs=a.saveAs=a,(module.exports=a);});
 
-  //# sourceMappingURL=FileSaver.min.js.map
+
   });
+
+  var shorterCssColorNames = {
+    aqua: /#00ffff(ff)?(?!\w)|#0ff(f)?(?!\w)/gi,
+    azure: /#f0ffff(ff)?(?!\w)/gi,
+    beige: /#f5f5dc(ff)?(?!\w)/gi,
+    bisque: /#ffe4c4(ff)?(?!\w)/gi,
+    black: /#000000(ff)?(?!\w)|#000(f)?(?!\w)/gi,
+    blue: /#0000ff(ff)?(?!\w)|#00f(f)?(?!\w)/gi,
+    brown: /#a52a2a(ff)?(?!\w)/gi,
+    coral: /#ff7f50(ff)?(?!\w)/gi,
+    cornsilk: /#fff8dc(ff)?(?!\w)/gi,
+    crimson: /#dc143c(ff)?(?!\w)/gi,
+    cyan: /#00ffff(ff)?(?!\w)|#0ff(f)?(?!\w)/gi,
+    darkblue: /#00008b(ff)?(?!\w)/gi,
+    darkcyan: /#008b8b(ff)?(?!\w)/gi,
+    darkgrey: /#a9a9a9(ff)?(?!\w)/gi,
+    darkred: /#8b0000(ff)?(?!\w)/gi,
+    deeppink: /#ff1493(ff)?(?!\w)/gi,
+    dimgrey: /#696969(ff)?(?!\w)/gi,
+    gold: /#ffd700(ff)?(?!\w)/gi,
+    green: /#008000(ff)?(?!\w)/gi,
+    grey: /#808080(ff)?(?!\w)/gi,
+    honeydew: /#f0fff0(ff)?(?!\w)/gi,
+    hotpink: /#ff69b4(ff)?(?!\w)/gi,
+    indigo: /#4b0082(ff)?(?!\w)/gi,
+    ivory: /#fffff0(ff)?(?!\w)/gi,
+    khaki: /#f0e68c(ff)?(?!\w)/gi,
+    lavender: /#e6e6fa(ff)?(?!\w)/gi,
+    lime: /#00ff00(ff)?(?!\w)|#0f0(f)?(?!\w)/gi,
+    linen: /#faf0e6(ff)?(?!\w)/gi,
+    maroon: /#800000(ff)?(?!\w)/gi,
+    moccasin: /#ffe4b5(ff)?(?!\w)/gi,
+    navy: /#000080(ff)?(?!\w)/gi,
+    oldlace: /#fdf5e6(ff)?(?!\w)/gi,
+    olive: /#808000(ff)?(?!\w)/gi,
+    orange: /#ffa500(ff)?(?!\w)/gi,
+    orchid: /#da70d6(ff)?(?!\w)/gi,
+    peru: /#cd853f(ff)?(?!\w)/gi,
+    pink: /#ffc0cb(ff)?(?!\w)/gi,
+    plum: /#dda0dd(ff)?(?!\w)/gi,
+    purple: /#800080(ff)?(?!\w)/gi,
+    red: /#ff0000(ff)?(?!\w)|#f00(f)?(?!\w)/gi,
+    salmon: /#fa8072(ff)?(?!\w)/gi,
+    seagreen: /#2e8b57(ff)?(?!\w)/gi,
+    seashell: /#fff5ee(ff)?(?!\w)/gi,
+    sienna: /#a0522d(ff)?(?!\w)/gi,
+    silver: /#c0c0c0(ff)?(?!\w)/gi,
+    skyblue: /#87ceeb(ff)?(?!\w)/gi,
+    snow: /#fffafa(ff)?(?!\w)/gi,
+    tan: /#d2b48c(ff)?(?!\w)/gi,
+    teal: /#008080(ff)?(?!\w)/gi,
+    thistle: /#d8bfd8(ff)?(?!\w)/gi,
+    tomato: /#ff6347(ff)?(?!\w)/gi,
+    violet: /#ee82ee(ff)?(?!\w)/gi,
+    wheat: /#f5deb3(ff)?(?!\w)/gi,
+    white: /#ffffff(ff)?(?!\w)|#fff(f)?(?!\w)/gi,
+  };
+
+  var REGEX = {
+    whitespace: /\s+/g,
+    urlHexPairs: /%[\dA-F]{2}/g,
+    quotes: /"/g,
+  };
+
+  function collapseWhitespace(str) {
+    return str.trim().replace(REGEX.whitespace, ' ');
+  }
+
+  function dataURIPayload(string) {
+    return encodeURIComponent(string)
+      .replace(REGEX.urlHexPairs, specialHexEncode);
+  }
+
+  // `#` gets converted to `%23`, so quite a few CSS named colors are shorter than
+  // their equivalent URL-encoded hex codes.
+  function colorCodeToShorterNames(string) {
+    Object.keys(shorterCssColorNames).forEach(function(key) {
+      if (shorterCssColorNames[key].test(string)) {
+        string = string.replace(shorterCssColorNames[key], key);
+      }
+    });
+
+    return string;
+  }
+
+  function specialHexEncode(match) {
+    switch (match) { // Browsers tolerate these characters, and they're frequent
+      case '%20': return ' ';
+      case '%3D': return '=';
+      case '%3A': return ':';
+      case '%2F': return '/';
+      default: return match.toLowerCase(); // compresses better
+    }
+  }
+
+  function svgToTinyDataUri(svgString) {
+    if (typeof svgString !== 'string') {
+      throw new TypeError('Expected a string, but received ' + typeof svgString);
+    }
+    // Strip the Byte-Order Mark if the SVG has one
+    if (svgString.charCodeAt(0) === 0xfeff) { svgString = svgString.slice(1); }
+
+    var body = colorCodeToShorterNames(collapseWhitespace(svgString))
+      .replace(REGEX.quotes, "'");
+    return 'data:image/svg+xml,' + dataURIPayload(body);
+  }
+
+  svgToTinyDataUri.toSrcset = function toSrcset(svgString) {
+    return svgToTinyDataUri(svgString).replace(/ /g, '%20');
+  };
+
+  var miniSvgDataUri = svgToTinyDataUri;
 
   class Sketch {
     constructor (width, height, shadowRoot, svg, svgY) {
@@ -89670,13 +89755,7 @@
       this.fullscreen = false;
       this.background ='rgba(0, 0, 0, 1)';
 
-      // todo rename these
-      // this.randomDots = []
-      // this.circles = []
-
       this.dx = null;
-      this.xNodes = null;
-      this.yNodes = null;
 
       this.xgap = 50;
       this.zgap = 50;
@@ -89686,8 +89765,10 @@
       this.tempo = 0.05;
       this.ampl = 20;
       this.period = 500;
-      this.setupP5 = this.setupP5.bind(this);
+      this.xNodes = parseInt(this.width / this.xgap);
+      this.yNodes = parseInt(this.height / this.zgap);
 
+      this.setupP5 = this.setupP5.bind(this);
       this.loader = this.shadowRoot.querySelector('.loader');
     }
 
@@ -89696,17 +89777,16 @@
       p.setup = () => { this.setup(); };
       p.draw = () => { this.draw(); };
       p.windowResized = () => { this.windowResized(); };
-      // p.doubleClicked = () => {this.doubleClicked()}
     }
 
     setup () {
-      this.xNodes = parseInt(this.width / this.xgap);
-      this.yNodes = parseInt(this.height / this.zgap);
       this.p.noCanvas();
       this.p.createCanvas(this.width, this.height, this.p.WEBGL);
       this.p.pixelDensity(4); // todo
       this.setOrtho();
       this.p.frameRate(30);
+      this.p.noStroke();
+      this.p.fill(249, 66, 58);
       // this.p.setAttributes('antialias', true);
       // this.p.smooth()
 
@@ -89730,46 +89810,35 @@
       this.dx = (this.p.TWO_PI / this.period) * this.spacing;
       this.theta += this.tempo;
 
-      this.drawGrid();
-    }
-
-    drawGrid () {
+      // todo
       this.p.translate(-this.width/2, this.height/2, 0);
       this.p.rotateX(this.p.HALF_PI);
-      let a = this.theta;
-      let z = 0;
+      this.p.translate((this.xgap / 2 + this.nodesize / 2) * -1, 0, 0);
 
-      const y = Math.sin(a) * this.ampl;
+      this.drawGrid();
+      this.moveSvg();
+    }
+
+    moveSvg() {
+      const y = Math.sin(this.theta) * this.ampl;
       if (this.svg) {
         this.c.forEach((cc) => {
           cc.setAttribute('cy', this.svgY + y);
         });
       }
+    }
 
-      this.p.translate((this.xgap / 2 + this.nodesize / 2) * -1, 0, 0);
+    drawGrid () {
+      let a = this.theta;
+      let z = 0;
+
       for(let x = 0; x<= this.xNodes; x++) {
         const yp = Math.sin(a) * this.ampl;
         this.p.translate(this.xgap, yp, z * -this.zgap);
 
         for(z = 0; z<= this.yNodes; z++) {
-          // let isCircle = false
           this.p.translate(0, 0, this.zgap);
-
-          // circle
-          // if (this.randomDots.length) {
-          //   for(let d = 0; d < this.randomDots.length; d++) {
-          //     if (this.randomDots[d].x === x && this.randomDots[d].y === z) {
-          //       this.circles[d].draw(yp)
-          //       isCircle = true
-          //     }
-          //   }
-          // }
-
-          // if (!isCircle) {
-          //   this.p.noStroke()
-          //   this.p.fill(249, 66, 58)
-          //   this.p.sphere(this.nodesize)
-          // }
+          this.p.sphere(this.nodesize);
 
           a += this.dx;
         }
@@ -89785,42 +89854,66 @@
       this.p.loop();
     }
 
-    doubleClicked () {
-      if (this.circles.length < 3) {
-        const x = Math.round(Math.random() * this.xNodes);
-        const y = Math.round(Math.random() * this.yNodes);
-
-        this.randomDots.push({x: x, y: y});
-        this.circles.push(new Circle2(this.p, this.width, this.height));
-      }
-    }
-
     setFullscreen (val) {
       this.fullscreen = val === 'true';
     }
 
     save() {
-      const retina = window.devicePixelRatio > 1;
       this.canvas.style.display = 'none';
       this.loader.style.display = 'block';
-      const aspect = this.width / this.height;
-      const width = retina ? 1000 : 4000;
-      const height = Math.round(width / aspect);
       this.background = 'rgba(0, 0, 0, 0)';
+
+      const aspect = this.width / this.height;
+      const landscape = aspect > 1;
+      const retina = window.devicePixelRatio > 1;
+
+      let width, height;
+      if (landscape) {
+        width = retina ? 1000 : 4000;
+        height = Math.round(width / aspect);
+      } else {
+        height = retina ? 1000 : 4000;
+        width = Math.round(height * aspect);
+      }
+
+      const zoom = width / this.width;
+
       this.p.resizeCanvas(width, height, true);
       this.setOrtho();
       this.p.redraw();
 
-      if (this.canvas.toBlob) {
-        this.canvas.toBlob((blob) => {
-          FileSaver_min.saveAs(blob, 'design-het.png');
-          this.p.resizeCanvas(this.width, this.height, true);
-          this.setOrtho();
-          this.canvas.style.display = 'block';
-          this.loader.style.display = 'none';
-          this.play();
+      const newCanvas = document.createElement('canvas');
+      newCanvas.setAttribute('width', width);
+      newCanvas.setAttribute('height', height);
+      const ctx = newCanvas.getContext('2d');
+
+      const image = new Image();
+      const s = new XMLSerializer();
+      const svgStr = s.serializeToString(this.svg);
+      const url = miniSvgDataUri(svgStr);
+      image.src = url;
+      image.addEventListener('load', () => {
+        URL.revokeObjectURL(url);
+
+        const dataURL = this.canvas.toDataURL('image/png', 1.0);
+        const canvasImg = new Image();
+        canvasImg.addEventListener('load', () => {
+          URL.revokeObjectURL(dataURL);
+
+          ctx.drawImage(canvasImg, 0, 0, width, height);
+          ctx.drawImage(image, 0, 0, width, height); // todo
+
+          newCanvas.toBlob((blob) => {
+            FileSaver_min.saveAs(blob, 'design-het.png');
+            this.p.resizeCanvas(this.width, this.height, true);
+            this.setOrtho();
+            this.canvas.style.display = 'block';
+            this.loader.style.display = 'none';
+            this.play();
+          });
         });
-      }
+        canvasImg.src = dataURL;
+      });
     }
 
     setOrtho () {
@@ -89840,12 +89933,10 @@
     windowResized() {
       this.width = this.p.windowWidth;
       this.height = this.p.windowHeight;
-      console.log(this.p.windowWidth, this.p.windowHeight, 'size');
       this.p.resizeCanvas(this.width, this.height);
       this.setOrtho();
       this.xNodes = parseInt(this.width / this.xgap);
       this.yNodes = parseInt(this.height / this.zgap);
-      console.log('window');
     }
   }
 
@@ -90026,7 +90117,12 @@
     }
 
     createSvg (randomY, randomR) {
-      const svg = createElement('svg', {id: 'circle'});
+      const svg = createElement('svg', {
+        id: 'circle',
+        xmlns: 'http://www.w3.org/2000/svg',
+        width: 1000, // todo
+        height: 1000
+      });
       const randomX = Math.random() * (this.width - 4 * randomR) + 2 * randomR;
       const distance = 15;
 

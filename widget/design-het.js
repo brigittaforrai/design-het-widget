@@ -134,7 +134,12 @@ export default class DesignHet extends HTMLElement {
   }
 
   createSvg (randomY, randomR) {
-    const svg = createElement('svg', {id: 'circle'})
+    const svg = createElement('svg', {
+      id: 'circle',
+      xmlns: 'http://www.w3.org/2000/svg',
+      width: 1000, // todo
+      height: 1000
+    })
     const randomX = Math.random() * (this.width - 4 * randomR) + 2 * randomR
     const distance = 15
 

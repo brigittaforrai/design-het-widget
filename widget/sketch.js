@@ -1,5 +1,6 @@
 import { Circle, Circle2 } from './circle.js'
 import FileSaver from 'file-saver'
+import svgToMiniDataURI from 'mini-svg-data-uri'
 
 export default class Sketch {
   constructor (width, height, shadowRoot, svg, svgY) {
@@ -12,13 +13,7 @@ export default class Sketch {
     this.fullscreen = false
     this.background ='rgba(0, 0, 0, 1)'
 
-    // todo rename these
-    // this.randomDots = []
-    // this.circles = []
-
     this.dx = null
-    this.xNodes = null
-    this.yNodes = null
 
     this.xgap = 50
     this.zgap = 50
@@ -28,8 +23,10 @@ export default class Sketch {
     this.tempo = 0.05
     this.ampl = 20
     this.period = 500
-    this.setupP5 = this.setupP5.bind(this)
+    this.xNodes = parseInt(this.width / this.xgap)
+    this.yNodes = parseInt(this.height / this.zgap)
 
+    this.setupP5 = this.setupP5.bind(this)
     this.loader = this.shadowRoot.querySelector('.loader')
   }
 
@@ -38,17 +35,16 @@ export default class Sketch {
     p.setup = () => { this.setup() }
     p.draw = () => { this.draw() }
     p.windowResized = () => { this.windowResized() }
-    // p.doubleClicked = () => {this.doubleClicked()}
   }
 
   setup () {
-    this.xNodes = parseInt(this.width / this.xgap)
-    this.yNodes = parseInt(this.height / this.zgap)
     this.p.noCanvas()
     this.p.createCanvas(this.width, this.height, this.p.WEBGL)
     this.p.pixelDensity(4); // todo
     this.setOrtho()
     this.p.frameRate(30)
+    this.p.noStroke()
+    this.p.fill(249, 66, 58)
     // this.p.setAttributes('antialias', true);
     // this.p.smooth()
 
@@ -72,48 +68,36 @@ export default class Sketch {
     this.dx = (this.p.TWO_PI / this.period) * this.spacing
     this.theta += this.tempo
 
-    this.drawGrid()
-  }
-
-  drawGrid () {
+    // todo
     this.p.translate(-this.width/2, this.height/2, 0)
     this.p.rotateX(this.p.HALF_PI)
+    this.p.translate((this.xgap / 2 + this.nodesize / 2) * -1, 0, 0)
 
-    let objpos = 0
-    let a = this.theta
-    let z = 0;
+    this.drawGrid()
+    this.moveSvg()
+  }
 
-    const y = Math.sin(a) * this.ampl
+  moveSvg() {
+    const y = Math.sin(this.theta) * this.ampl
     if (this.svg) {
       this.c.forEach((cc) => {
         cc.setAttribute('cy', this.svgY + y)
       })
     }
+  }
 
-    this.p.translate((this.xgap / 2 + this.nodesize / 2) * -1, 0, 0)
+  drawGrid () {
+    let objpos = 0
+    let a = this.theta
+    let z = 0;
+
     for(let x = 0; x<= this.xNodes; x++) {
       const yp = Math.sin(a) * this.ampl
       this.p.translate(this.xgap, yp, z * -this.zgap)
 
       for(z = 0; z<= this.yNodes; z++) {
-        // let isCircle = false
         this.p.translate(0, 0, this.zgap)
-
-        // circle
-        // if (this.randomDots.length) {
-        //   for(let d = 0; d < this.randomDots.length; d++) {
-        //     if (this.randomDots[d].x === x && this.randomDots[d].y === z) {
-        //       this.circles[d].draw(yp)
-        //       isCircle = true
-        //     }
-        //   }
-        // }
-
-        // if (!isCircle) {
-        //   this.p.noStroke()
-        //   this.p.fill(249, 66, 58)
-        //   this.p.sphere(this.nodesize)
-        // }
+        this.p.sphere(this.nodesize)
 
         a += this.dx
       }
@@ -129,42 +113,66 @@ export default class Sketch {
     this.p.loop()
   }
 
-  doubleClicked () {
-    if (this.circles.length < 3) {
-      const x = Math.round(Math.random() * this.xNodes)
-      const y = Math.round(Math.random() * this.yNodes)
-
-      this.randomDots.push({x: x, y: y})
-      this.circles.push(new Circle2(this.p, this.width, this.height))
-    }
-  }
-
   setFullscreen (val) {
     this.fullscreen = val === 'true'
   }
 
   save() {
-    const retina = window.devicePixelRatio > 1;
     this.canvas.style.display = 'none'
     this.loader.style.display = 'block'
-    const aspect = this.width / this.height
-    const width = retina ? 1000 : 4000
-    const height = Math.round(width / aspect)
     this.background = 'rgba(0, 0, 0, 0)'
+
+    const aspect = this.width / this.height
+    const landscape = aspect > 1
+    const retina = window.devicePixelRatio > 1;
+
+    let width, height
+    if (landscape) {
+      width = retina ? 1000 : 4000
+      height = Math.round(width / aspect)
+    } else {
+      height = retina ? 1000 : 4000
+      width = Math.round(height * aspect)
+    }
+
+    const zoom = width / this.width
+
     this.p.resizeCanvas(width, height, true)
     this.setOrtho()
     this.p.redraw()
 
-    if (this.canvas.toBlob) {
-      this.canvas.toBlob((blob) => {
-        FileSaver.saveAs(blob, 'design-het.png');
-        this.p.resizeCanvas(this.width, this.height, true)
-        this.setOrtho()
-        this.canvas.style.display = 'block'
-        this.loader.style.display = 'none'
-        this.play()
+    const newCanvas = document.createElement('canvas')
+    newCanvas.setAttribute('width', width)
+    newCanvas.setAttribute('height', height)
+    const ctx = newCanvas.getContext('2d')
+
+    const image = new Image()
+    const s = new XMLSerializer()
+    const svgStr = s.serializeToString(this.svg)
+    const url = svgToMiniDataURI(svgStr)
+    image.src = url
+    image.addEventListener('load', () => {
+      URL.revokeObjectURL(url)
+
+      const dataURL = this.canvas.toDataURL('image/png', 1.0)
+      const canvasImg = new Image()
+      canvasImg.addEventListener('load', () => {
+        URL.revokeObjectURL(dataURL)
+
+        ctx.drawImage(canvasImg, 0, 0, width, height)
+        ctx.drawImage(image, 0, 0, width, height) // todo
+
+        newCanvas.toBlob((blob) => {
+          FileSaver.saveAs(blob, 'design-het.png')
+          this.p.resizeCanvas(this.width, this.height, true)
+          this.setOrtho()
+          this.canvas.style.display = 'block'
+          this.loader.style.display = 'none'
+          this.play()
+        })
       })
-    }
+      canvasImg.src = dataURL
+    })
   }
 
   setOrtho () {
@@ -184,11 +192,9 @@ export default class Sketch {
   windowResized() {
     this.width = this.p.windowWidth
     this.height = this.p.windowHeight
-    console.log(this.p.windowWidth, this.p.windowHeight, 'size');
     this.p.resizeCanvas(this.width, this.height)
     this.setOrtho()
     this.xNodes = parseInt(this.width / this.xgap)
     this.yNodes = parseInt(this.height / this.zgap)
-    console.log('window');
   }
 }
