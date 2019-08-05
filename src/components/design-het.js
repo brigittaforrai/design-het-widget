@@ -39,7 +39,7 @@ export default class DesignHet extends HTMLElement {
     toBlob.init()
     const randomR = Math.random() * 100 + 20
     const randomY = Math.random() * (this.height - 4 * randomR) + 2 * randomR
-    // this.svg = this.createSvg(randomY, randomR) // todo
+    this.svg = this.createSvg(randomY, randomR)
     this.sketch = new Sketch(this.width, this.height, this.shadowRoot, this.svg, randomY)
     new p5(this.sketch.setupP5);
 

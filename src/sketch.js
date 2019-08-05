@@ -1,6 +1,8 @@
 import FileSaver from 'file-saver'
 import svgToMiniDataURI from 'mini-svg-data-uri'
 
+// import {getRandom} from './helpers.js'
+
 export default class Sketch {
   constructor (width, height, shadowRoot, svg, svgY) {
     this.width = width
@@ -15,6 +17,7 @@ export default class Sketch {
 
     this.dx = null
 
+    // todo null
     this.xgap = 50
     this.zgap = 50
     this.theta = 0.00
@@ -65,9 +68,10 @@ export default class Sketch {
     this.p.clear()
     this.p.background(this.background)
 
-    if (this.fullscreen) {
-      this.p.orbitControl()
-    }
+    // if (this.fullscreen) {
+    //   this.p.orbitControl()
+    // }
+    this.p.orbitControl()
 
     this.dx = (this.p.TWO_PI / this.period) * this.spacing
     this.theta += this.tempo
@@ -78,7 +82,7 @@ export default class Sketch {
     this.p.translate((this.xgap / 2 + this.nodesize / 2) * -1, 0, 0)
 
     this.drawGrid()
-    // this.moveSvg() // todo
+    this.moveSvg()
   }
 
   moveSvg() {

@@ -1,3 +1,6 @@
+import {gridSettings} from './../settings.js'
+import {getRandom} from './../helpers.js'
+
 const template = document.createElement('template')
 template.id = 'design-het-interface'
 template.innerHTML = `
@@ -47,51 +50,16 @@ template.innerHTML = `
       </svg>
     </button>
     <button class="fullscreen">
-    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 488.4 488.4" style="enable-background:new 0 0 488.4 488.4;" xml:space="preserve">
-      <g>
-        <polygon points="441.1,407.8 338.8,305.5 305.5,338.8 407.8,441.1 328.3,441.1 328.3,488.4 488.4,488.4 488.4,328.3 441.1,328.3"/>
-        <polygon points="338.8,183 441.1,80.6 441.1,160.1 488.4,160.1 488.4,0 328.3,0 328.3,47.3 407.8,47.3 305.5,149.6"/>
-        <polygon points="149.6,305.5 47.3,407.8 47.3,328.3 0,328.3 0,488.4 160.1,488.4 160.1,441.1 80.6,441.1 183,338.8"/>
-        <polygon points="160.1,47.3 160.1,0 0,0 0,160.1 47.3,160.1 47.3,80.6 149.6,183 183,149.6 80.6,47.3"/>
-      </g>
-    </svg>
+      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 488.4 488.4" style="enable-background:new 0 0 488.4 488.4;" xml:space="preserve">
+        <g>
+          <polygon points="441.1,407.8 338.8,305.5 305.5,338.8 407.8,441.1 328.3,441.1 328.3,488.4 488.4,488.4 488.4,328.3 441.1,328.3"/>
+          <polygon points="338.8,183 441.1,80.6 441.1,160.1 488.4,160.1 488.4,0 328.3,0 328.3,47.3 407.8,47.3 305.5,149.6"/>
+          <polygon points="149.6,305.5 47.3,407.8 47.3,328.3 0,328.3 0,488.4 160.1,488.4 160.1,441.1 80.6,441.1 183,338.8"/>
+          <polygon points="160.1,47.3 160.1,0 0,0 0,160.1 47.3,160.1 47.3,80.6 149.6,183 183,149.6 80.6,47.3"/>
+        </g>
+      </svg>
     </button>
-    <div class="interface closed">
-        <div>
-          <label for="xgap">x gap</label>
-          <input min="20" max="500" step="1" type="range" name="xgap" value="50"></input>
-        </div>
-
-        <div>
-          <label for="zgap">z gap</label>
-          <input min="20" max="500" step="1" type="range" name="zgap" value="50"></input>
-        </div>
-
-        <div>
-          <label for="nodesize">node size</label>
-          <input min="5" max="100" step="1" type="range" name="nodesize" value="6"></input>
-        </div>
-
-        <div>
-          <label for="spacing">spacing</label>
-          <input min="0" max="100" step="0.1" type="range" name="spacing" value="3"></input>
-        </div>
-
-        <div>
-          <label for="tempo">tempo</label>
-          <input min="0" max="1" step="0.001" type="range" name="tempo" value="0.05"></input>
-        </div>
-
-        <div>
-          <label for="ampl">amplitude</label>
-          <input min="0" max="200" step="1" type="range" name="ampl" value="20"></input>
-        </div>
-
-        <div>
-          <label for="period">period</label>
-          <input min="1" max="5000" step="1" type="range" name="period" value="500"></input>
-        </div>
-    </div>
+    <div class="interface closed"></div>
   </div>
 `
 
@@ -126,6 +94,22 @@ export default class DesignHetInterface extends HTMLElement {
     this.muted = false
   }
 
+  addSettings () {
+    const interf = this.shadowRoot.querySelector('.interface')
+    Object.keys(gridSettings).forEach((i) => {
+      const item = gridSettings[i]
+      const div = document.createElement('div')
+      const random = getRandom(item[0], item[1] / 3, item[2])
+      const setting = `
+        <label for="${i}">${CONSTANTS[i]}: ${random}</label>
+        <input step="${item[2]}" min="${item[0]}" max="${item[1]}" type="range" name="${i}" value="${random}"></input>
+      `
+      div.innerHTML = setting
+      interf.appendChild(div)
+      this.widget.setAttribute(i, random)
+    })
+  }
+
   connectedCallback () {
     this.widget = document.querySelector('design-het')
     this.triggerBtn = this.shadowRoot.querySelector('button.toggle-settings')
@@ -134,6 +118,7 @@ export default class DesignHetInterface extends HTMLElement {
     this.saveBtn = this.shadowRoot.querySelector('.save')
     this.fullscreenBtn = this.shadowRoot.querySelector('.fullscreen')
 
+    this.addSettings()
     this.addEventListeners()
 
     const save = this.getAttribute('save')
@@ -159,10 +144,10 @@ export default class DesignHetInterface extends HTMLElement {
   }
 
   addEventListeners () {
+    // todo
     const inputs = ['xgap', 'zgap', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
     inputs.forEach((name) => {
       this.inputEvents(name)
-      this.updateLabel(name, widgetData[name])
     })
 
     // open settings
