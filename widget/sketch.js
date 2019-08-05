@@ -11,6 +11,7 @@ export default class Sketch {
     this.svgY = svgY
 
     this.fullscreen = false
+    this.canAnimate = true
     this.background ='rgba(0, 0, 0, 1)'
 
     this.dx = null
@@ -28,6 +29,10 @@ export default class Sketch {
 
     this.setupP5 = this.setupP5.bind(this)
     this.loader = this.shadowRoot.querySelector('.loader')
+  }
+
+  setAnimation (val) {
+    this.canAnimate = (val === 'true')
   }
 
   setupP5 (p) {
@@ -105,12 +110,16 @@ export default class Sketch {
   }
 
   stop() {
-    this.p.noLoop()
+    if (this.canAnimate) {
+      this.p.noLoop()
+    }
     this.save()
   }
 
   play() {
-    this.p.loop()
+    if (this.canAnimate) {
+      this.p.loop()
+    }
   }
 
   setFullscreen (val) {

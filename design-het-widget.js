@@ -125,12 +125,11 @@
       super();
       this.attachShadow({mode: 'open'});
       this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+      this.muted = false;
     }
 
     connectedCallback () {
-      this.isFullscreen = false;
-      this.muted = false;
-
       this.widget = document.querySelector('design-het');
       this.triggerBtn = this.shadowRoot.querySelector('button.toggle-settings');
       this.muteBtn = this.shadowRoot.querySelector('button.mute');
@@ -138,10 +137,14 @@
       this.saveBtn = this.shadowRoot.querySelector('.save');
       this.fullscreenBtn = this.shadowRoot.querySelector('.fullscreen');
 
-      /* Get the documentElement (<html>) to display the page in fullscreen */
-      this.elem = document.documentElement;
-
       this.addEventListeners();
+
+      const save = this.getAttribute('save');
+      if (save === 'true') {
+        this.saveBtn.style.display = 'inline-block';
+      } else {
+        this.saveBtn.style.display = 'none';
+      }
     }
 
     updateLabel (name, value) {
@@ -179,12 +182,10 @@
       // toggle fullscreen
       this.fullscreenBtn.addEventListener('click', () => {
         if (this.fullscreen) {
-          // this.exitFullscreen()
           this.fullscreen = false;
           this.widget.setAttribute('fullscreen', this.fullscreen);
           this.widget.style.zIndex = -100;
         } else {
-          // this.openFullscreen()
           this.fullscreen = true;
           this.widget.setAttribute('fullscreen', this.fullscreen);
           this.widget.style.zIndex = 9999;
@@ -205,31 +206,6 @@
         //   this.widget.setAttribute('saveas', imageName)
         // }
       });
-    }
-
-    openFullscreen () {
-      if (this.elem.requestFullscreen) {
-        this.elem.requestFullscreen();
-      } else if (this.elem.mozRequestFullScreen) { /* Firefox */
-        this.elem.mozRequestFullScreen();
-      } else if (this.elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-        this.elem.webkitRequestFullscreen();
-      } else if (elem.msRequestFullscreen) { /* IE/Edge */
-        this.elem.msRequestFullscreen();
-      }
-    }
-
-    exitFullscreen () {
-      console.log('exit');
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) { /* Firefox */
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) { /* IE/Edge */
-        document.msExitFullscreen();
-      }
     }
   }
   window.customElements.define('design-het-interface', DesignHetInterface);
@@ -89629,7 +89605,7 @@
   var FileSaver_min = createCommonjsModule(function (module, exports) {
   (function(a,b){b();})(commonjsGlobal,function(){function b(a,b){return "undefined"==typeof b?b={autoBom:!1}:"object"!=typeof b&&(console.warn("Deprecated: Expected third argument to be a object"),b={autoBom:!b}),b.autoBom&&/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(a.type)?new Blob(["\uFEFF",a],{type:a.type}):a}function c(b,c,d){var e=new XMLHttpRequest;e.open("GET",b),e.responseType="blob",e.onload=function(){a(e.response,c,d);},e.onerror=function(){console.error("could not download file");},e.send();}function d(a){var b=new XMLHttpRequest;b.open("HEAD",a,!1);try{b.send();}catch(a){}return 200<=b.status&&299>=b.status}function e(a){try{a.dispatchEvent(new MouseEvent("click"));}catch(c){var b=document.createEvent("MouseEvents");b.initMouseEvent("click",!0,!0,window,0,0,0,80,20,!1,!1,!1,!1,0,null),a.dispatchEvent(b);}}var f="object"==typeof window&&window.window===window?window:"object"==typeof self&&self.self===self?self:"object"==typeof commonjsGlobal&&commonjsGlobal.global===commonjsGlobal?commonjsGlobal:void 0,a=f.saveAs||("object"!=typeof window||window!==f?function(){}:"download"in HTMLAnchorElement.prototype?function(b,g,h){var i=f.URL||f.webkitURL,j=document.createElement("a");g=g||b.name||"download",j.download=g,j.rel="noopener","string"==typeof b?(j.href=b,j.origin===location.origin?e(j):d(j.href)?c(b,g,h):e(j,j.target="_blank")):(j.href=i.createObjectURL(b),setTimeout(function(){i.revokeObjectURL(j.href);},4E4),setTimeout(function(){e(j);},0));}:"msSaveOrOpenBlob"in navigator?function(f,g,h){if(g=g||f.name||"download","string"!=typeof f)navigator.msSaveOrOpenBlob(b(f,h),g);else if(d(f))c(f,g,h);else{var i=document.createElement("a");i.href=f,i.target="_blank",setTimeout(function(){e(i);});}}:function(a,b,d,e){if(e=e||open("","_blank"),e&&(e.document.title=e.document.body.innerText="downloading..."),"string"==typeof a)return c(a,b,d);var g="application/octet-stream"===a.type,h=/constructor/i.test(f.HTMLElement)||f.safari,i=/CriOS\/[\d]+/.test(navigator.userAgent);if((i||g&&h)&&"object"==typeof FileReader){var j=new FileReader;j.onloadend=function(){var a=j.result;a=i?a:a.replace(/^data:[^;]*;/,"data:attachment/file;"),e?e.location.href=a:location=a,e=null;},j.readAsDataURL(a);}else{var k=f.URL||f.webkitURL,l=k.createObjectURL(a);e?e.location=l:location.href=l,e=null,setTimeout(function(){k.revokeObjectURL(l);},4E4);}});f.saveAs=a.saveAs=a,(module.exports=a);});
 
-
+  //# sourceMappingURL=FileSaver.min.js.map
   });
 
   var shorterCssColorNames = {
@@ -89753,6 +89729,7 @@
       this.svgY = svgY;
 
       this.fullscreen = false;
+      this.canAnimate = true;
       this.background ='rgba(0, 0, 0, 1)';
 
       this.dx = null;
@@ -89770,6 +89747,10 @@
 
       this.setupP5 = this.setupP5.bind(this);
       this.loader = this.shadowRoot.querySelector('.loader');
+    }
+
+    setAnimation (val) {
+      this.canAnimate = (val === 'true');
     }
 
     setupP5 (p) {
@@ -89846,12 +89827,16 @@
     }
 
     stop() {
-      this.p.noLoop();
+      if (this.canAnimate) {
+        this.p.noLoop();
+      }
       this.save();
     }
 
     play() {
-      this.p.loop();
+      if (this.canAnimate) {
+        this.p.loop();
+      }
     }
 
     setFullscreen (val) {
@@ -90110,6 +90095,8 @@
       };
       document.addEventListener('click', musicPlay);
       document.addEventListener('scroll', musicPlay);
+
+      this.sketch.setAnimation(this.getAttribute('animation'));
     }
 
     static get observedAttributes() {

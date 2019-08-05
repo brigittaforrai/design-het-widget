@@ -127,6 +127,8 @@ export default class DesignHet extends HTMLElement {
     }
     document.addEventListener('click', musicPlay)
     document.addEventListener('scroll', musicPlay)
+
+    this.sketch.setAnimation(this.getAttribute('animation'))
   }
 
   static get observedAttributes() {

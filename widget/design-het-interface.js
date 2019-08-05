@@ -122,12 +122,11 @@ export default class DesignHetInterface extends HTMLElement {
     super()
     this.attachShadow({mode: 'open'});
     this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+    this.muted = false
   }
 
   connectedCallback () {
-    this.isFullscreen = false
-    this.muted = false
-
     this.widget = document.querySelector('design-het')
     this.triggerBtn = this.shadowRoot.querySelector('button.toggle-settings')
     this.muteBtn = this.shadowRoot.querySelector('button.mute')
@@ -135,10 +134,14 @@ export default class DesignHetInterface extends HTMLElement {
     this.saveBtn = this.shadowRoot.querySelector('.save')
     this.fullscreenBtn = this.shadowRoot.querySelector('.fullscreen')
 
-    /* Get the documentElement (<html>) to display the page in fullscreen */
-    this.elem = document.documentElement
-
     this.addEventListeners()
+
+    const save = this.getAttribute('save')
+    if (save === 'true') {
+      this.saveBtn.style.display = 'inline-block'
+    } else {
+      this.saveBtn.style.display = 'none'
+    }
   }
 
   updateLabel (name, value) {
@@ -176,12 +179,10 @@ export default class DesignHetInterface extends HTMLElement {
     // toggle fullscreen
     this.fullscreenBtn.addEventListener('click', () => {
       if (this.fullscreen) {
-        // this.exitFullscreen()
         this.fullscreen = false
         this.widget.setAttribute('fullscreen', this.fullscreen)
         this.widget.style.zIndex = -100
       } else {
-        // this.openFullscreen()
         this.fullscreen = true
         this.widget.setAttribute('fullscreen', this.fullscreen)
         this.widget.style.zIndex = 9999
@@ -202,31 +203,6 @@ export default class DesignHetInterface extends HTMLElement {
       //   this.widget.setAttribute('saveas', imageName)
       // }
     })
-  }
-
-  openFullscreen () {
-    if (this.elem.requestFullscreen) {
-      this.elem.requestFullscreen()
-    } else if (this.elem.mozRequestFullScreen) { /* Firefox */
-      this.elem.mozRequestFullScreen()
-    } else if (this.elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-      this.elem.webkitRequestFullscreen()
-    } else if (elem.msRequestFullscreen) { /* IE/Edge */
-      this.elem.msRequestFullscreen()
-    }
-  }
-
-  exitFullscreen () {
-    console.log('exit');
-    if (document.exitFullscreen) {
-      document.exitFullscreen()
-    } else if (document.mozCancelFullScreen) { /* Firefox */
-      document.mozCancelFullScreen()
-    } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
-      document.webkitExitFullscreen()
-    } else if (document.msExitFullscreen) { /* IE/Edge */
-      document.msExitFullscreen()
-    }
   }
 }
 window.customElements.define('design-het-interface', DesignHetInterface);
