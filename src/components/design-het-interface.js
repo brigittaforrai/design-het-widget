@@ -11,7 +11,7 @@ template.innerHTML = `
 
   <div class="interface-container">
     <button class="toggle-settings"></button>
-    <button class="mute off"></button>
+    <button class="mute"></button>
     <button class="save"></button>
     <button class="fullscreen"></button>
     <button class="randomCircle"></button>
@@ -26,6 +26,7 @@ export default class DesignHetInterface extends HTMLElement {
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
     this.muted = false
+    this.fullscreen = false
   }
 
   addSettings () {
@@ -90,31 +91,38 @@ export default class DesignHetInterface extends HTMLElement {
 
     // open settings
     this.triggerBtn.addEventListener('click', () => {
-      if (this.settings.classList.contains('open')) {
-        this.settings.classList.remove('open')
-        this.settings.classList.add('closed')
+      if (this.settings.classList.contains('opened')) {
+        this.settings.classList.remove('opened')
+        this.triggerBtn.classList.remove('opened')
       } else {
-        this.settings.classList.remove('closed')
-        this.settings.classList.add('open')
+        this.settings.classList.add('opened')
+        this.triggerBtn.classList.add('opened')
       }
     })
 
     // toggle fullscreen
     this.fullscreenBtn.addEventListener('click', () => {
+      console.log('click', this.fullscreen);
       if (this.fullscreen) {
         this.fullscreen = false
-        this.widget.setAttribute('fullscreen', this.fullscreen)
         this.widget.style.zIndex = -100
+        this.fullscreenBtn.classList.remove('stop')
       } else {
         this.fullscreen = true
-        this.widget.setAttribute('fullscreen', this.fullscreen)
         this.widget.style.zIndex = 9999
+        this.fullscreenBtn.classList.add('stop')
       }
+      this.widget.setAttribute('fullscreen', this.fullscreen)
     })
 
     this.muteBtn.addEventListener('click', () => {
       this.muted = !this.muted
       this.widget.setAttribute('mute', this.muted)
+      if (this.muted) {
+        this.muteBtn.classList.add('muted')
+      } else {
+        this.muteBtn.classList.remove('muted')
+      }
     })
 
     // trigger save image

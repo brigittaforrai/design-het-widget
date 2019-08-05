@@ -66,10 +66,9 @@ export default class Sketch {
     this.p.clear()
     this.p.background(this.background)
 
-    // if (this.fullscreen) {
-    //   this.p.orbitControl()
-    // }
-    this.p.orbitControl()
+    if (this.fullscreen) {
+      this.p.orbitControl()
+    }
 
     this.dx = (this.p.TWO_PI / this.period) * this.spacing
     this.theta += this.tempo

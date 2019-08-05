@@ -22,7 +22,7 @@ export default {
       babelrc: false,
       exclude: 'node_modules/**' // only transpile our source code
     }),
-    terser(),
+    terser()
     // serve(),
     // livereload()
   ]
