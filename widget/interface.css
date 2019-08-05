@@ -10,11 +10,12 @@
   height: 34px;
   width: 34px;
   background-color: white;
-  border-radius: 5px;
+  border-radius: 20px;
   margin: 5px 0;
   border: 0px solid white;
   outline: none;
   cursor: pointer;
+  padding: 8px;
 }
 
 .interface-container button svg {
