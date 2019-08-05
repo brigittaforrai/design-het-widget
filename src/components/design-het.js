@@ -1,5 +1,5 @@
 import p5 from 'p5'
-import Sketch from './sketch.js'
+import Sketch from './../sketch.js'
 import toBlob from 'canvas-to-blob'
 
 const template = document.createElement('template')
@@ -7,13 +7,13 @@ template.id = 'design-het-widget'
 
 template.innerHTML = `
   <style>
-    @import "widget/widget.css"
+    @import "src/styles/widget.css"
   </style>
 
   <div class="widget-container">
     <div class="loader">Downloading image ...</div>
     <audio id="audio" controls autoplay loop>
-      <source src="widget/music.mp3" type="audio/mpeg">
+      <source src="src/assets/music.mp3" type="audio/mpeg">
       <p>Your browser doesn't support HTML5 audio. Here is
     </audio>
   </div>

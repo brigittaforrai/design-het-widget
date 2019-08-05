@@ -1,4 +1,3 @@
-import { Circle, Circle2 } from './circle.js'
 import FileSaver from 'file-saver'
 import svgToMiniDataURI from 'mini-svg-data-uri'
 

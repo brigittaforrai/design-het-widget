@@ -2,7 +2,7 @@ const template = document.createElement('template')
 template.id = 'design-het-interface'
 template.innerHTML = `
   <style>
-    @import "widget/interface.css"
+    @import "src/styles/interface.css"
   </style>
 
   <div class="interface-container">
