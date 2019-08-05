@@ -1,7 +1,6 @@
 import FileSaver from 'file-saver'
 import svgToMiniDataURI from 'mini-svg-data-uri'
-
-// import {getRandom} from './helpers.js'
+import {getRandom} from './helpers.js'
 
 export default class Sketch {
   constructor (width, height, shadowRoot) {
@@ -16,16 +15,16 @@ export default class Sketch {
 
     this.dx = null
 
-    this.xgap = null
-    this.zgap = null
+    this.xgap = 50 // todo
+    this.zgap = 50 // todo
     this.theta = null
     this.nodesize = null
     this.spacing = null
     this.tempo = null
     this.ampl = null
     this.period = null
-    this.xNodes = parseInt(this.width / this.xgap)
-    this.yNodes = parseInt(this.height / this.zgap)
+    this.xNodes = 0
+    this.yNodes = 0
 
     this.setupP5 = this.setupP5.bind(this)
     this.loader = this.shadowRoot.querySelector('.loader')
@@ -36,22 +35,25 @@ export default class Sketch {
   }
 
   setupP5 (p) {
+    const randomRotate = getRandom(0, 0.15, 0.01)
     this.p = p
     p.setup = () => { this.setup() }
-    p.draw = () => { this.draw() }
+    p.draw = () => { this.draw(randomRotate) }
     p.windowResized = () => { this.windowResized() }
   }
 
   setup () {
     this.p.noCanvas()
     this.p.createCanvas(this.width, this.height, this.p.WEBGL)
-    this.p.pixelDensity(4); // todo
+    this.p.pixelDensity(4) // todo
     this.setOrtho()
     this.p.frameRate(30)
     this.p.noStroke()
     this.p.fill(249, 66, 58)
-    // this.p.setAttributes('antialias', true);
+
+    // this.p.setAttributes('antialias', true)
     // this.p.smooth()
+    // this.p.debugMode()
 
     // move p5 default canvas inside widget
     this.canvas = document.querySelector('canvas')
@@ -60,7 +62,7 @@ export default class Sketch {
     widget.appendChild(this.canvas)
   }
 
-  draw () {
+  draw (randomRotate) {
     this.p.clear()
     this.p.background(this.background)
 
@@ -73,9 +75,13 @@ export default class Sketch {
     this.theta += this.tempo
 
     // todo
-    this.p.translate(-this.width/2, this.height/2, 0)
+    const tx = -this.width/2 - (2 * this.xgap)
+    const ty = this.height/2 + (2 * this.zgap)
+    this.p.translate(tx, ty, 0)
     this.p.rotateX(this.p.HALF_PI)
-    this.p.translate((this.xgap / 2 + this.nodesize / 2) * -1, 0, 0)
+    this.p.rotateX(randomRotate)
+    // this.p.rotateY(randomRotate)
+    this.p.rotateZ(randomRotate)
 
     this.drawGrid()
     this.moveSvg()
@@ -96,7 +102,7 @@ export default class Sketch {
   drawGrid () {
     let objpos = 0
     let a = this.theta
-    let z = 0;
+    let z = 0
 
     for(let x = 0; x<= this.xNodes; x++) {
       const yp = Math.sin(a) * this.ampl
@@ -138,7 +144,7 @@ export default class Sketch {
 
     const aspect = this.width / this.height
     const landscape = aspect > 1
-    const retina = window.devicePixelRatio > 1;
+    const retina = window.devicePixelRatio > 1
 
     let width, height
     if (landscape) {
@@ -191,17 +197,21 @@ export default class Sketch {
   }
 
   setOrtho () {
-    this.p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2, this.width * -3, this.width * 3);
+    this.p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2, this.width * -3, this.width * 3)
   }
 
   update (name, val) {
     if (this[name] !== val) {
       this[name] = parseFloat(val)
       if (name === 'xgap' || name === 'zgap') {
-        this.xNodes = parseInt(this.width / this.xgap)
-        this.yNodes = parseInt(this.height / this.zgap)
+        this.calcNodeNum()
       }
     }
+  }
+
+  calcNodeNum () {
+    this.xNodes = Math.ceil(this.width / this.xgap) + 2
+    this.yNodes = Math.ceil(this.height / this.zgap) + 2
   }
 
   windowResized() {
@@ -209,7 +219,6 @@ export default class Sketch {
     this.height = this.p.windowHeight
     this.p.resizeCanvas(this.width, this.height)
     this.setOrtho()
-    this.xNodes = parseInt(this.width / this.xgap)
-    this.yNodes = parseInt(this.height / this.zgap)
+    this.calcNodeNum()
   }
 }

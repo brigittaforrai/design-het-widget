@@ -7,8 +7,8 @@
 }
 
 .interface-container button {
-  height: 34px;
-  width: 34px;
+  height: 40px;
+  width: 40px;
   background-color: white;
   border-radius: 20px;
   margin: 5px 0;
@@ -16,34 +16,42 @@
   outline: none;
   cursor: pointer;
   padding: 8px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
 }
 
-.interface-container button svg {
-  width: 100%;
-  height: 100%;
+.interface-container button.toggle-settings {
+  background-image: url('./../assets/icons/slider_e.svg');
 }
-
-.interface-container button.toggle-settings:hover {
-  background-color: rgb(241, 67, 65);
-}
-
-.interface-container button.mute.on svg {
-  margin-left: 3px;
-}
-
-.st0 {
-  fill: rgb(241, 67, 65);
-}
-
-.interface-container button.mute.on #mute {
-  display: none;
+.interface-container button.mute {
+  background-image: url('./../assets/icons/sound.svg');
 }
 .interface-container button.mute.off {
-  background-color: rgb(241, 67, 65);
+  background-image: url('./../assets/icons/mute.svg');
 }
-.interface-container button.mute.off .st0 {
-  fill: white;
+.interface-container button.save {
+  background-image: url('./../assets/icons/download_e.svg');
 }
+.interface-container button.fullscreen {
+  background-image: url('./../assets/icons/play.svg');
+}
+.interface-container button.randomCircle {
+  background-image: url('./../assets/icons/random_e.svg');
+}
+
+/* hover */
+.interface-container button.toggle-settings:hover {
+  background-image: url('./../assets/icons/slider.svg');
+}
+.interface-container button.save:hover {
+  background-image: url('./../assets/icons/download.svg');
+}
+.interface-container button.randomCircle:hover {
+  background-image: url('./../assets/icons/random.svg');
+}
+
+
 
 .interface-container .interface {
   display: flex;

@@ -17,15 +17,12 @@ export default {
     resolve({
       jsnext: true
     }),
+    commonjs(),
     babel({
       babelrc: false,
-      include: [
-
-      ],
       exclude: 'node_modules/**' // only transpile our source code
     }),
-    commonjs(),
-    terser()
+    terser(),
     // serve(),
     // livereload()
   ]

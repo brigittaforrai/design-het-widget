@@ -13,12 +13,12 @@ template.innerHTML = `
 
   <div class="widget-container">
     <div class="loader"></div>
-    <audio id="audio" controls autoplay loop>
+    <audio id="audio" controls autoplay loop style="display: none">
       <source src="src/assets/music.mp3" type="audio/mpeg">
       <p>Your browser doesn't support HTML5 audio. Here is
     </audio>
   </div>
-  <svg id="circle" xmlns="http://www.w3.org/2000/svg" width="1000" height="1000"></svg>
+  <svg id="circle" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"></svg>
 `
 
 const inputAttrs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
@@ -64,25 +64,29 @@ export default class DesignHet extends HTMLElement {
   }
 
   updateSvg() {
-    const randomR = getRandom(20, 80)
+    const randomR = getRandom(20, 100)
     const randomY = getRandom(2 * randomR, this.height - 4 * randomR) // todo
     const randomX = getRandom(2 * randomR, this.width - 4 * randomR)
     const distance = randomR / 5
 
-    const number = getRandom(3, 20)
+    const number = getRandom(3, 23)
+    const directions = [-1, 0, 1]
+    const index = getRandom(0, 2)
+    const direction = directions[index]
 
     this.svg.innerHTML = ''
 
     for (let i = 0; i < number; i++) {
+      const y = randomY + ((i * distance / 2) * direction)
       const circle = createElement('circle', {
         cx: randomX + i * distance,
-        cy: randomY,
+        cy: y,
         r: randomR,
         fill: '#ff2836',
         stroke: 'white',
         strokeWidth: 2,
         name: 'circle',
-        pos: randomY
+        pos: y
       })
       this.svg.appendChild(circle)
     }
