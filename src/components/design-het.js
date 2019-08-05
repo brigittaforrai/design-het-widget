@@ -1,6 +1,7 @@
 import p5 from 'p5'
 import Sketch from './../sketch.js'
 import toBlob from 'canvas-to-blob'
+import {getRandom} from './../helpers.js'
 
 const template = document.createElement('template')
 template.id = 'design-het-widget'
@@ -11,12 +12,13 @@ template.innerHTML = `
   </style>
 
   <div class="widget-container">
-    <div class="loader">Downloading image ...</div>
+    <div class="loader"></div>
     <audio id="audio" controls autoplay loop>
       <source src="src/assets/music.mp3" type="audio/mpeg">
       <p>Your browser doesn't support HTML5 audio. Here is
     </audio>
   </div>
+  <svg id="circle" xmlns="http://www.w3.org/2000/svg" width="1000" height="1000"></svg>
 `
 
 const inputAttrs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
@@ -29,6 +31,8 @@ export default class DesignHet extends HTMLElement {
     this.shadowRoot.appendChild(template.content.cloneNode(true))
 
     this.sketch = null
+    this.svg = null
+    this.circles = null
     this.width = window.innerWidth
     this.height = window.innerHeight
   }
@@ -37,10 +41,9 @@ export default class DesignHet extends HTMLElement {
     console.log('Interactive content: brigittaforrai.com')
 
     toBlob.init()
-    const randomR = Math.random() * 100 + 20
-    const randomY = Math.random() * (this.height - 4 * randomR) + 2 * randomR
-    this.svg = this.createSvg(randomY, randomR)
-    this.sketch = new Sketch(this.width, this.height, this.shadowRoot, this.svg, randomY)
+    this.svg = this.shadowRoot.querySelector('svg#circle')
+    this.sketch = new Sketch(this.width, this.height, this.shadowRoot)
+    this.updateSvg()
     new p5(this.sketch.setupP5);
 
     // todo preload ?
@@ -60,17 +63,17 @@ export default class DesignHet extends HTMLElement {
     return inputAttrs.concat(attrs)
   }
 
-  createSvg (randomY, randomR) {
-    const svg = createElement('svg', {
-      id: 'circle',
-      xmlns: 'http://www.w3.org/2000/svg',
-      width: 1000, // todo
-      height: 1000
-    })
-    const randomX = Math.random() * (this.width - 4 * randomR) + 2 * randomR
-    const distance = 15
+  updateSvg() {
+    const randomR = getRandom(20, 80)
+    const randomY = getRandom(2 * randomR, this.height - 4 * randomR) // todo
+    const randomX = getRandom(2 * randomR, this.width - 4 * randomR)
+    const distance = randomR / 5
 
-    for (let i = 0; i < 8; i++) {
+    const number = getRandom(3, 20)
+
+    this.svg.innerHTML = ''
+
+    for (let i = 0; i < number; i++) {
       const circle = createElement('circle', {
         cx: randomX + i * distance,
         cy: randomY,
@@ -78,13 +81,13 @@ export default class DesignHet extends HTMLElement {
         fill: '#ff2836',
         stroke: 'white',
         strokeWidth: 2,
-        name: 'circle'
+        name: 'circle',
+        pos: randomY
       })
-      svg.appendChild(circle)
+      this.svg.appendChild(circle)
     }
-
-    this.shadowRoot.appendChild(svg)
-    return svg
+    const circles = this.shadowRoot.querySelectorAll([name="circle"])
+    this.sketch.updateSvgNodes(circles)
   }
 
   attributeChangedCallback (attrName, oldval, newVal) {

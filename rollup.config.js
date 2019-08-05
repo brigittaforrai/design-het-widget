@@ -25,7 +25,7 @@ export default {
       exclude: 'node_modules/**' // only transpile our source code
     }),
     commonjs(),
-    terser(),
+    terser()
     // serve(),
     // livereload()
   ]

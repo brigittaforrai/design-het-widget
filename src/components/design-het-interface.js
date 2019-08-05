@@ -1,5 +1,6 @@
 import {gridSettings} from './../settings.js'
 import {getRandom} from './../helpers.js'
+import {settingNames} from './../constants'
 
 const template = document.createElement('template')
 template.id = 'design-het-interface'
@@ -59,31 +60,10 @@ template.innerHTML = `
         </g>
       </svg>
     </button>
+    <button class="randomCircle">R</button>
     <div class="interface closed"></div>
   </div>
 `
-
-const widgetData = {
-  xgap: 50,
-  zgap: 50,
-  theta: 0.00,
-  nodesize: 6,
-  spacing: 3,
-  tempo: 0.05,
-  ampl: 20,
-  period: 500
-}
-
-const CONSTANTS = {
-  xgap: 'x-gap',
-  zgap: 'z-gap',
-  theta: 'theta',
-  nodesize: 'node size',
-  spacing: 'spacing',
-  tempo: 'tempo',
-  ampl: 'amplitudo',
-  period: 'period'
-}
 
 export default class DesignHetInterface extends HTMLElement {
   constructor() {
@@ -101,7 +81,7 @@ export default class DesignHetInterface extends HTMLElement {
       const div = document.createElement('div')
       const random = getRandom(item[0], item[1] / 3, item[2])
       const setting = `
-        <label for="${i}">${CONSTANTS[i]}: ${random}</label>
+        <label for="${i}">${settingNames[i]}: ${random}</label>
         <input step="${item[2]}" min="${item[0]}" max="${item[1]}" type="range" name="${i}" value="${random}"></input>
       `
       div.innerHTML = setting
@@ -117,6 +97,7 @@ export default class DesignHetInterface extends HTMLElement {
     this.settings = this.shadowRoot.querySelector('.interface')
     this.saveBtn = this.shadowRoot.querySelector('.save')
     this.fullscreenBtn = this.shadowRoot.querySelector('.fullscreen')
+    this.randomBtn = this.shadowRoot.querySelector('.randomCircle')
 
     this.addSettings()
     this.addEventListeners()
@@ -130,14 +111,13 @@ export default class DesignHetInterface extends HTMLElement {
   }
 
   updateLabel (name, value) {
-    this.shadowRoot.querySelector(`label[for="${name}"]`).innerHTML = `${CONSTANTS[name]}: ${value}`
+    this.shadowRoot.querySelector(`label[for="${name}"]`).innerHTML = `${settingNames[name]}: ${value}`
   }
 
   inputEvents (name) {
     const selector = `input[name=${name}]`
     this.shadowRoot.querySelector(selector).addEventListener('input', (e) => {
       const value = e.target.value
-      widgetData[name] = value
       this.widget.setAttribute(name, value)
       this.updateLabel(name, value)
     })
@@ -148,6 +128,10 @@ export default class DesignHetInterface extends HTMLElement {
     const inputs = ['xgap', 'zgap', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
     inputs.forEach((name) => {
       this.inputEvents(name)
+    })
+
+    this.randomBtn.addEventListener('click', () => {
+      this.widget.updateSvg()
     })
 
     // open settings

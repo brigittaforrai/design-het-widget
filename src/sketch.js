@@ -4,28 +4,26 @@ import svgToMiniDataURI from 'mini-svg-data-uri'
 // import {getRandom} from './helpers.js'
 
 export default class Sketch {
-  constructor (width, height, shadowRoot, svg, svgY) {
+  constructor (width, height, shadowRoot) {
     this.width = width
     this.height = height
     this.shadowRoot = shadowRoot
-    this.svg = svg
-    this.svgY = svgY
 
+    this.svgNodes = []
     this.fullscreen = false
     this.canAnimate = true
     this.background ='rgba(0, 0, 0, 1)'
 
     this.dx = null
 
-    // todo null
-    this.xgap = 50
-    this.zgap = 50
-    this.theta = 0.00
-    this.nodesize = 6
-    this.spacing = 3
-    this.tempo = 0.05
-    this.ampl = 20
-    this.period = 500
+    this.xgap = null
+    this.zgap = null
+    this.theta = null
+    this.nodesize = null
+    this.spacing = null
+    this.tempo = null
+    this.ampl = null
+    this.period = null
     this.xNodes = parseInt(this.width / this.xgap)
     this.yNodes = parseInt(this.height / this.zgap)
 
@@ -60,8 +58,6 @@ export default class Sketch {
     this.canvas.parentNode.removeChild(this.canvas)
     const widget = this.shadowRoot.querySelector('.widget-container')
     widget.appendChild(this.canvas)
-
-    this.c = this.shadowRoot.querySelectorAll([name="circle"])
   }
 
   draw () {
@@ -85,13 +81,16 @@ export default class Sketch {
     this.moveSvg()
   }
 
+  updateSvgNodes(nodes) {
+    this.svgNodes = nodes
+  }
+
   moveSvg() {
-    const y = Math.sin(this.theta) * this.ampl
-    if (this.svg) {
-      this.c.forEach((cc) => {
-        cc.setAttribute('cy', this.svgY + y)
-      })
-    }
+    const y = Math.sin(this.theta) * this.ampl // todo
+    this.svgNodes.forEach((node) => {
+      const pos = parseInt(node.getAttribute('pos'))
+      node.setAttribute('cy', pos + y)
+    })
   }
 
   drawGrid () {
@@ -130,6 +129,9 @@ export default class Sketch {
   }
 
   save() {
+    const svg = this.shadowRoot.querySelector('svg#circle')
+
+    svg.style.display = 'none'
     this.canvas.style.display = 'none'
     this.loader.style.display = 'block'
     this.background = 'rgba(0, 0, 0, 0)'
@@ -140,10 +142,10 @@ export default class Sketch {
 
     let width, height
     if (landscape) {
-      width = retina ? 1000 : 4000
+      width = retina ? 4000 : 4000 // todo
       height = Math.round(width / aspect)
     } else {
-      height = retina ? 1000 : 4000
+      height = retina ? 4000 : 4000 // todo
       width = Math.round(height * aspect)
     }
 
@@ -160,7 +162,7 @@ export default class Sketch {
 
     const image = new Image()
     const s = new XMLSerializer()
-    const svgStr = s.serializeToString(this.svg)
+    const svgStr = s.serializeToString(svg)
     const url = svgToMiniDataURI(svgStr)
     image.src = url
     image.addEventListener('load', () => {
@@ -180,6 +182,7 @@ export default class Sketch {
           this.setOrtho()
           this.canvas.style.display = 'block'
           this.loader.style.display = 'none'
+          svg.style.display= 'inline-block'
           this.play()
         })
       })

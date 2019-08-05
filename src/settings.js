@@ -9,6 +9,18 @@ const gridSettings = {
   period: [1, 5000, 1]
 }
 
+const defaultSettings = {
+  xgap: 50,
+  zgap: 50,
+  theta: 0.00,
+  nodesize: 6,
+  spacing: 3,
+  tempo: 0.05,
+  ampl: 20,
+  period: 500
+}
+
 export {
-  gridSettings
+  gridSettings,
+  defaultSettings
 }
