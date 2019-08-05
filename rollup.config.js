@@ -26,7 +26,7 @@ export default {
     }),
     commonjs(),
     terser(),
-    serve(),
-    livereload()
+    // serve(),
+    // livereload()
   ]
 };

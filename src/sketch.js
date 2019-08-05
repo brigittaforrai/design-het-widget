@@ -172,7 +172,7 @@ export default class Sketch {
         URL.revokeObjectURL(dataURL)
 
         ctx.drawImage(canvasImg, 0, 0, width, height)
-        ctx.drawImage(image, 0, 0, width, height) // todo
+        // ctx.drawImage(image, 0, 0, width, height) // todo
 
         newCanvas.toBlob((blob) => {
           FileSaver.saveAs(blob, 'design-het.png')
