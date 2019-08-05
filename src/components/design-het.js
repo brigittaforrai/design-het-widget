@@ -42,8 +42,9 @@ export default class DesignHet extends HTMLElement {
     console.log('Interactive content: brigittaforrai.com')
 
     toBlob.init()
+    const canLoop = (this.getAttribute('animation') === 'true')
     this.svg = this.shadowRoot.querySelector('svg#circle')
-    this.sketch = new Sketch(this.width, this.height, this.shadowRoot)
+    this.sketch = new Sketch(this.width, this.height, this.shadowRoot, canLoop)
     this.updateSvg()
     new p5(this.sketch.setupP5);
 
@@ -56,8 +57,6 @@ export default class DesignHet extends HTMLElement {
     }
     document.addEventListener('click', musicPlay)
     document.addEventListener('scroll', musicPlay)
-
-    this.sketch.setAnimation(this.getAttribute('animation'))
   }
 
   static get observedAttributes() {

@@ -4,14 +4,14 @@ import {getRandom} from './helpers.js'
 import {RED} from './constants.js'
 
 export default class Sketch {
-  constructor (width, height, shadowRoot) {
+  constructor (width, height, shadowRoot, canLoop) {
     this.width = width
     this.height = height
     this.shadowRoot = shadowRoot
 
     this.svgNodes = []
     this.fullscreen = false
-    this.canAnimate = true
+    this.canLoop = canLoop
     this.background ='rgba(0, 0, 0, 1)'
 
     this.dx = null
@@ -31,10 +31,6 @@ export default class Sketch {
     this.loader = this.shadowRoot.querySelector('.loader')
   }
 
-  setAnimation (val) {
-    this.canAnimate = (val === 'true')
-  }
-
   setupP5 (p) {
     const randomRotate = getRandom(0, 0.15, 0.01)
     this.p = p
@@ -47,11 +43,16 @@ export default class Sketch {
     this.p.noCanvas()
     this.p.createCanvas(this.width, this.height, this.p.WEBGL)
     this.p.pixelDensity(4) // todo
-    this.setOrtho()
-    this.p.frameRate(30)
     this.p.noStroke()
     this.p.fill(RED)
 
+    if (!this.canLoop) {
+      this.p.noLoop()
+    } else {
+      this.p.frameRate(30)
+    }
+
+    this.setOrtho()
     // this.p.setAttributes('antialias', true)
     // this.p.smooth()
     // this.p.debugMode()
@@ -117,14 +118,14 @@ export default class Sketch {
   }
 
   stop() {
-    if (this.canAnimate) {
+    if (this.canLoop) {
       this.p.noLoop()
     }
     this.save()
   }
 
   play() {
-    if (this.canAnimate) {
+    if (this.canLoop) {
       this.p.loop()
     }
   }

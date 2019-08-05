@@ -57,8 +57,8 @@ export default class DesignHetInterface extends HTMLElement {
     this.addSettings()
     this.addEventListeners()
 
-    const save = this.getAttribute('save')
-    if (save === 'true') {
+    const download = this.getAttribute('download')
+    if (download === 'true') {
       this.saveBtn.style.display = 'inline-block'
     } else {
       this.saveBtn.style.display = 'none'
