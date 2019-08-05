@@ -5,7 +5,6 @@
   z-index: 10000;
   padding: 5px;
 }
-
 .interface-container button {
   height: 40px;
   width: 40px;
@@ -45,17 +44,12 @@
 .interface-container button.randomCircle {
   background-image: url('./../assets/icons/random_e.svg');
 }
-
-/* active */
 .interface-container button.save:active {
   background-image: url('./../assets/icons/download.svg');
 }
 .interface-container button.randomCircle:active {
   background-image: url('./../assets/icons/random.svg');
 }
-
-
-
 .interface-container .interface {
   display: flex;
   justify-content: space-between;
@@ -71,7 +65,6 @@
 .interface.opened {
   display: flex;
 }
-
 .interface > div {
   display: flex;
   flex-direction: column;
@@ -86,7 +79,6 @@
 .interface > div:last-child {
   margin-bottom: 0;
 }
-
 .interface label {
   color: white;
   height: 100%;
@@ -95,9 +87,7 @@
   font-family: helvetica;
   font-size: 12px;
 }
-
 /* http://danielstern.ca/range.css/#/ */
-
 input[type=range] {
   -webkit-appearance: none;
   width: 100%;
