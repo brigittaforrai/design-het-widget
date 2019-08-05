@@ -1,6 +1,7 @@
 import FileSaver from 'file-saver'
 import svgToMiniDataURI from 'mini-svg-data-uri'
 import {getRandom} from './helpers.js'
+import {RED} from './constants.js'
 
 export default class Sketch {
   constructor (width, height, shadowRoot) {
@@ -49,7 +50,7 @@ export default class Sketch {
     this.setOrtho()
     this.p.frameRate(30)
     this.p.noStroke()
-    this.p.fill(249, 66, 58)
+    this.p.fill(RED)
 
     // this.p.setAttributes('antialias', true)
     // this.p.smooth()
@@ -79,7 +80,6 @@ export default class Sketch {
     this.p.translate(tx, ty, 0)
     this.p.rotateX(this.p.HALF_PI)
     this.p.rotateX(randomRotate)
-    // this.p.rotateY(randomRotate)
     this.p.rotateZ(randomRotate)
 
     this.drawGrid()

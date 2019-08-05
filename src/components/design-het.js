@@ -2,6 +2,7 @@ import p5 from 'p5'
 import Sketch from './../sketch.js'
 import toBlob from 'canvas-to-blob'
 import {getRandom} from './../helpers.js'
+import {RED} from './../constants.js'
 
 const template = document.createElement('template')
 template.id = 'design-het-widget'
@@ -82,7 +83,7 @@ export default class DesignHet extends HTMLElement {
         cx: randomX + i * distance,
         cy: y,
         r: randomR,
-        fill: '#ff2836',
+        fill: RED,
         stroke: 'white',
         strokeWidth: 2,
         name: 'circle',

@@ -1,4 +1,4 @@
-const RED = ''
+const RED = '#ff2836'
 
 const settingNames = {
   xgap: 'x-gap',

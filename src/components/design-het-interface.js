@@ -34,7 +34,7 @@ export default class DesignHetInterface extends HTMLElement {
     Object.keys(gridSettings).forEach((i) => {
       const item = gridSettings[i]
       const div = document.createElement('div')
-      const random = getRandom(item[0], item[1] / 3, item[2])
+      const random = getRandom(item[3], item[4] / 3, item[2])
       const setting = `
         <label for="${i}">${settingNames[i]}: ${random}</label>
         <input step="${item[2]}" min="${item[0]}" max="${item[1]}" type="range" name="${i}" value="${random}"></input>
