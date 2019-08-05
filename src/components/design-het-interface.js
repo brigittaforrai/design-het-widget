@@ -29,34 +29,34 @@ template.innerHTML = `
     }
 
     .interface-container button.toggle-settings {
-      background-image: url('public/icons/slider_e.svg');
+      background-image: url('src/assets/icons/slider_e.svg');
     }
     .interface-container button.toggle-settings.opened {
-      background-image: url('public/icons/slider.svg');
+      background-image: url('src/assets/icons/slider.svg');
     }
     .interface-container button.mute {
-      background-image: url('public/icons/sound.svg');
+      background-image: url('src/assets/icons/sound.svg');
     }
     .interface-container button.mute.muted {
-      background-image: url('public/icons/mute.svg');
+      background-image: url('src/assets/icons/mute.svg');
     }
     .interface-container button.save {
-      background-image: url('public/icons/download_e.svg');
+      background-image: url('src/assets/icons/download_e.svg');
     }
     .interface-container button.fullscreen {
-      background-image: url('public/icons/play.svg');
+      background-image: url('src/assets/icons/play.svg');
     }
     .interface-container button.fullscreen.stop {
-      background-image: url('public/icons/stop.svg');
+      background-image: url('src/assets/icons/stop.svg');
     }
     .interface-container button.randomCircle {
-      background-image: url('public/icons/random_e.svg');
+      background-image: url('src/assets/icons/random_e.svg');
     }
     .interface-container button.save:active {
-      background-image: url('public/icons/download.svg');
+      background-image: url('src/assets/icons/download.svg');
     }
     .interface-container button.randomCircle:active {
-      background-image: url('public/icons/random.svg');
+      background-image: url('src/assets/icons/random.svg');
     }
     .interface-container .interface {
       display: flex;

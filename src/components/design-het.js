@@ -88,7 +88,7 @@ template.innerHTML = `
   <div class="widget-container">
     <div class="loader"></div>
     <audio id="audio" controls autoplay loop style="display: none">
-      <source src="public/music.mp3" type="audio/mpeg">
+      <source src="src/assets/music.mp3" type="audio/mpeg">
       <p>Your browser doesn't support HTML5 audio. Here is
     </audio>
   </div>
