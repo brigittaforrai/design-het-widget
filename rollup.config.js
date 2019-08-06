@@ -12,7 +12,7 @@ export default [
     output: {
       file: pkg.main,
       format: 'umd',
-      name: 'designhet-widget-2019'
+      name: 'design-het-widget'
     },
     plugins: [
       resolve(),
@@ -29,7 +29,7 @@ export default [
     output: {
       file: pkg.main.replace(/\.js$/, '.min.js'),
       format: 'umd',
-      name: 'designhet-widget-2019'
+      name: 'design-het-widget'
     },
     plugins: [
       resolve(),

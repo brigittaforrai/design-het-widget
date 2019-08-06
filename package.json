@@ -1,8 +1,8 @@
 {
-  "name": "designhet-widget-2019",
-  "version": "1.0.0",
+  "name": "design-het-widget",
+  "version": "2.0.0",
   "description": "",
-  "main": "dist/designhet-widget-2019.js",
+  "main": "dist/design-het-widget.js",
   "author": "",
   "engines": {
     "node": ">= 6"
