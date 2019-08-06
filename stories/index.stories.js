@@ -1,6 +1,6 @@
 import { document, console } from 'global';
 import { storiesOf } from '@storybook/html';
-import './../dist/design-het-widget.js'
+import './../dist/designhet-widget-2019.min.js'
 
 storiesOf('Demo', module)
   .add('widget', () => {

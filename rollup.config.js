@@ -2,23 +2,44 @@ import commonjs from 'rollup-plugin-commonjs'
 import resolve from 'rollup-plugin-node-resolve'
 import babel from 'rollup-plugin-babel'
 import { terser } from "rollup-plugin-terser"
+import image from 'rollup-plugin-image'
 
-export default {
-  input: 'index.js',
-  output: {
-    file: 'dist/design-het-widget.js',
-    format: 'umd',
-    name: 'designhet'
+import pkg from './package.json';
+
+export default [
+  {
+    input: 'index.js',
+    output: {
+      file: pkg.main,
+      format: 'umd',
+      name: 'designhet-widget-2019'
+    },
+    plugins: [
+      resolve(),
+      commonjs(),
+      image(),
+      babel({
+        babelrc: false,
+        exclude: 'node_modules/**',
+      })
+    ]
   },
-  plugins: [
-    resolve({
-      jsnext: true
-    }),
-    commonjs(),
-    babel({
-      babelrc: false,
-      exclude: 'node_modules/**' // only transpile our source code
-    }),
-    terser()
-  ]
-};
+  {
+    input: 'index.js',
+    output: {
+      file: pkg.main.replace(/\.js$/, '.min.js'),
+      format: 'umd',
+      name: 'designhet-widget-2019'
+    },
+    plugins: [
+      resolve(),
+      commonjs(),
+      image(),
+      babel({
+        babelrc: false,
+        exclude: 'node_modules/**',
+      }),
+      terser()
+    ]
+  }
+]

@@ -1,18 +1,22 @@
 {
-  "name": "designhet",
+  "name": "designhet-widget-2019",
   "version": "1.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/designhet-widget-2019.js",
+  "author": "",
+  "engines": {
+    "node": ">= 6"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c",
+    "prepublish": "npm run build",
     "storybook": "start-storybook -p 6006"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/brigittaforrai/designhet.git"
   },
-  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/brigittaforrai/designhet/issues"
@@ -28,6 +32,7 @@
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-css-only": "^1.0.0",
+    "rollup-plugin-image": "^1.0.2",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.1.1"
   },
