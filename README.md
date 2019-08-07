@@ -28,7 +28,7 @@ import 'node_modules/design-het-widget/dist/design-het-widget.min.js'
 Add components
 ``` html
 <body>
-	<!-- Use the two components together -->
+<!-- Use the two components together -->
     <design-het music-url="music.mp3" style="width: 100%; height: 100%; position: fixed; left: 0; top: 0; z-index: -100;"></design-het>
     <design-het-interface></design-het-interface>
 </body>
