@@ -21,34 +21,34 @@
 }
 
 .interface-container button.toggle-settings {
-  background-image: url('./../assets/icons/slider_e.svg');
+  background-image: svg-load('./../assets/icons/slider_e.svg');
 }
 .interface-container button.toggle-settings.opened {
-  background-image: url('./../assets/icons/slider.svg');
+  background-image: svg-load('./../assets/icons/slider.svg');
 }
 .interface-container button.mute {
-  background-image: url('./../assets/icons/sound.svg');
+  background-image: svg-load('./../assets/icons/sound.svg');
 }
 .interface-container button.mute.muted {
-  background-image: url('./../assets/icons/mute.svg');
+  background-image: svg-load('./../assets/icons/mute.svg');
 }
 .interface-container button.save {
-  background-image: url('./../assets/icons/download_e.svg');
+  background-image: svg-load('./../assets/icons/download_e.svg');
 }
 .interface-container button.fullscreen {
-  background-image: url('./../assets/icons/play.svg');
+  background-image: svg-load('./../assets/icons/play.svg');
 }
 .interface-container button.fullscreen.stop {
-  background-image: url('./../assets/icons/stop.svg');
+  background-image: svg-load('./../assets/icons/stop.svg');
 }
 .interface-container button.randomCircle {
-  background-image: url('./../assets/icons/random_e.svg');
+  background-image: svg-load('./../assets/icons/random_e.svg');
 }
 .interface-container button.save:active {
-  background-image: url('./../assets/icons/download.svg');
+  background-image: svg-load('./../assets/icons/download.svg');
 }
 .interface-container button.randomCircle:active {
-  background-image: url('./../assets/icons/random.svg');
+  background-image: svg-load('./../assets/icons/random.svg');
 }
 .interface-container .interface {
   display: flex;
