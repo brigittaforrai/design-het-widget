@@ -28,27 +28,27 @@ export default [
         exclude: 'node_modules/**',
       })
     ]
+  },
+  {
+    input: 'index.js',
+    output: {
+      file: pkg.main.replace(/\.js$/,'.min.js'),
+      format: 'umd',
+      name: 'design-het-widget'
+    },
+    plugins: [
+      resolve(),
+      commonjs(),
+      postcss({
+        inject: false,
+        minimize: true,
+        plugins: [svgLoader()]
+      }),
+      babel({
+        babelrc: false,
+        exclude: 'node_modules/**',
+      }),
+      terser()
+    ]
   }
-  // {
-  //   input: 'index.js',
-  //   output: {
-  //     file: pkg.main.replace(/\.js$/,'.min.js'),
-  //     format: 'umd',
-  //     name: 'design-het-widget'
-  //   },
-  //   plugins: [
-  //     resolve(),
-  //     commonjs(),
-  //     postcss({
-  //       inject: false,
-  //       minimize: true,
-  //       plugins: [svgLoader()]
-  //     }),
-  //     babel({
-  //       babelrc: false,
-  //       exclude: 'node_modules/**',
-  //     }),
-  //     terser()
-  //   ]
-  // }
 ]
