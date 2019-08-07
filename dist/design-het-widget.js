@@ -26,16 +26,16 @@
     }
   }
 
-  const RED = '#ff2836';
+  const RED = '#f9423a';
   const settingNames = {
-    xgap: 'x-gap',
-    zgap: 'z-gap',
+    xgap: 'x táv',
+    zgap: 'y táv',
     theta: 'theta',
-    nodesize: 'node size',
-    spacing: 'spacing',
-    tempo: 'tempo',
-    ampl: 'amplitudo',
-    period: 'period'
+    nodesize: 'méret',
+    spacing: 'hullámhossz',
+    tempo: 'tempó',
+    ampl: 'amplitúdó',
+    period: 'periódus'
   };
 
   var css = ".interface-container{position:fixed;left:10px;top:10px;z-index:10000;padding:5px}.interface-container button{height:40px;width:40px;background-color:#fff;border-radius:20px;margin:5px 0;border:0 solid #fff;outline:none;cursor:pointer;padding:8px;background-repeat:no-repeat;background-position:50%;background-size:contain}.interface-container button.toggle-settings{background-image:url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 53 53'%3E%3Cdefs%3E%3Cstyle%3E.cls-1,.cls-2{fill:%23fff;stroke:%23f9423a;stroke-miterlimit:10;stroke-width:3px}.cls-2{fill:%23f9423a;stroke:%23fff}%3C/style%3E%3C/defs%3E%3Cg id='Layer_2' data-name='Layer 2'%3E%3Cg id='Layer_5' data-name='Layer 5'%3E%3Ccircle class='cls-1' cx='26.5' cy='26.5' r='25'/%3E%3Cpath class='cls-1' d='M9 26.5h35'/%3E%3Ccircle class='cls-2' cx='19.25' cy='26.83' r='5'/%3E%3Cpath class='cls-1' d='M14 38.75h25'/%3E%3Ccircle class='cls-2' cx='26.25' cy='39.08' r='5'/%3E%3Cpath class='cls-1' d='M14 14.75h25'/%3E%3Ccircle class='cls-2' cx='30.25' cy='15.08' r='5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")}.interface-container button.toggle-settings.opened{background-image:url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 53 53'%3E%3Cdefs%3E%3Cstyle%3E.cls-2,.cls-3{stroke:%23fff;stroke-miterlimit:10;stroke-width:3px;fill:%23fff}.cls-3{stroke:%23f9423a}%3C/style%3E%3C/defs%3E%3Cg id='Layer_2' data-name='Layer 2'%3E%3Cg id='Layer_10' data-name='Layer 10'%3E%3Ccircle cx='26.5' cy='26.5' r='25' stroke-miterlimit='10' stroke-width='3' stroke='%23fff' fill='%23f9423a'/%3E%3Cpath class='cls-2' d='M9 26.5h35'/%3E%3Ccircle class='cls-3' cx='19.25' cy='26.83' r='5'/%3E%3Cpath class='cls-2' d='M14 38.75h25'/%3E%3Ccircle class='cls-3' cx='26.25' cy='39.08' r='5'/%3E%3Cpath class='cls-2' d='M14 14.75h25'/%3E%3Ccircle class='cls-3' cx='30.25' cy='15.08' r='5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")}.interface-container button.mute{background-image:url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 53 53'%3E%3Cdefs%3E%3Cstyle%3E.cls-2{fill:%23fff;stroke:%23f9423a;stroke-miterlimit:10;stroke-width:2.55px}%3C/style%3E%3C/defs%3E%3Cg id='Layer_2' data-name='Layer 2'%3E%3Cg id='Layer_2-2' data-name='Layer 2'%3E%3Ccircle cx='26.5' cy='26.5' r='25' stroke-width='3' fill='%23fff' stroke='%23f9423a' stroke-miterlimit='10'/%3E%3Cpath class='cls-2' d='M13.29 20.41h9.07v12.47h-9.07zM22.36 20.41l9.35-5.95v24.08l-9.35-5.66V20.41zM36.54 16.75v19.83M40.54 20.75v11.83'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")}.interface-container button.mute.muted{background-image:url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 53 53'%3E%3Cdefs%3E%3Cstyle%3E.cls-2,.cls-3{fill:%23f9423a;stroke:%23fff;stroke-miterlimit:10;stroke-width:2.55px}.cls-3{fill:%23fff}%3C/style%3E%3C/defs%3E%3Cg id='Layer_2' data-name='Layer 2'%3E%3Cg id='Layer_7' data-name='Layer 7'%3E%3Ccircle cx='26.5' cy='26.5' r='25' stroke-width='3' stroke='%23fff' stroke-miterlimit='10' fill='%23f9423a'/%3E%3Cpath class='cls-2' d='M13.29 20.41h9.07v12.47h-9.07zM22.36 20.41l9.35-5.95v24.08l-9.35-5.66V20.41z'/%3E%3Cpath class='cls-3' d='M35.36 22.48l8.37 8.37M43.73 22.48l-8.37 8.37'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")}.interface-container button.save{background-image:url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 53 53'%3E%3Cdefs%3E%3Cstyle%3E.cls-1{fill:%23fff;stroke:%23f9423a;stroke-miterlimit:10;stroke-width:3px}%3C/style%3E%3C/defs%3E%3Cg id='Layer_2' data-name='Layer 2'%3E%3Cg id='Layer_3' data-name='Layer 3'%3E%3Ccircle class='cls-1' cx='26.5' cy='26.5' r='25'/%3E%3Cpath fill='%23fff' d='M26.5 12.5v23.67'/%3E%3Cpath fill='none' stroke='%23f9423a' stroke-miterlimit='10' stroke-width='3' d='M26.5 12.5v11.83'/%3E%3Cpath fill='%23f9423a' d='M18.27 21.92l8.23 14.25 8.23-14.25H18.27z'/%3E%3Cpath class='cls-1' d='M15.67 39.5h21.66'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")}.interface-container button.fullscreen{background-image:url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 53 53'%3E%3Cg data-name='Layer 2'%3E%3Cg data-name='Layer 6'%3E%3Ccircle cx='26.5' cy='26.5' r='25' stroke-width='3' stroke='%23f9423a' stroke-miterlimit='10' fill='%23fff'/%3E%3Cpath fill='%23fff' d='M18.44 26.33h23.67'/%3E%3Cpath fill='none' stroke-width='2' stroke='%23f9423a' stroke-miterlimit='10' d='M18.44 26.33h3.72'/%3E%3Cpath fill='%23f9423a' d='M18.11 40.2l24-13.87-24-13.86V40.2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")}.interface-container button.fullscreen.stop{background-image:url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 53 53'%3E%3Cg data-name='Layer 2'%3E%3Cg data-name='Layer 11' stroke='%23fff' stroke-miterlimit='10'%3E%3Ccircle cx='26.5' cy='26.5' r='25' fill='%23f9423a' stroke-width='3'/%3E%3Cpath fill='%23fff' stroke-width='2' d='M18.12 18.12h16.76v16.76H18.12z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")}.interface-container button.randomCircle{background-image:url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 53 53'%3E%3Cdefs%3E%3Cstyle%3E.cls-2{stroke-miterlimit:10;fill:%23f9423a;stroke:%23fff;stroke-width:2px}%3C/style%3E%3C/defs%3E%3Cg id='Layer_2' data-name='Layer 2'%3E%3Cg id='Layer_4' data-name='Layer 4'%3E%3Ccircle cx='26.5' cy='26.5' r='25' stroke-miterlimit='10' fill='%23fff' stroke='%23f9423a' stroke-width='3'/%3E%3Ccircle class='cls-2' cx='21.24' cy='30.93' r='10.01'/%3E%3Ccircle class='cls-2' cx='25.83' cy='26.35' r='10.01'/%3E%3Ccircle class='cls-2' cx='30.41' cy='21.77' r='10.01'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")}.interface-container button.save:active{background-image:url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 53 53'%3E%3Cdefs%3E%3Cstyle%3E.cls-2{fill:%23fff}%3C/style%3E%3C/defs%3E%3Cg id='Layer_2' data-name='Layer 2'%3E%3Cg id='Layer_8' data-name='Layer 8'%3E%3Ccircle cx='26.5' cy='26.5' r='25' stroke='%23fff' stroke-miterlimit='10' stroke-width='3' fill='%23f9423a'/%3E%3Cpath class='cls-2' d='M26.5 12.5v23.67'/%3E%3Cpath fill='none' stroke='%23fff' stroke-miterlimit='10' stroke-width='3' d='M26.5 12.5v11.83'/%3E%3Cpath class='cls-2' d='M18.27 21.92l8.23 14.25 8.23-14.25H18.27z'/%3E%3Cpath fill='%23fff' stroke='%23fff' stroke-miterlimit='10' stroke-width='3' d='M15.67 39.5h21.66'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")}.interface-container button.randomCircle:active{background-image:url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 53 53'%3E%3Cdefs%3E%3Cstyle%3E.cls-2{stroke-miterlimit:10;fill:%23fff;stroke:%23f9423a;stroke-width:2px}%3C/style%3E%3C/defs%3E%3Cg id='Layer_2' data-name='Layer 2'%3E%3Cg id='Layer_9' data-name='Layer 9'%3E%3Ccircle cx='26.5' cy='26.5' r='25' stroke-miterlimit='10' fill='%23f9423a' stroke='%23fff' stroke-width='3'/%3E%3Ccircle class='cls-2' cx='21.24' cy='30.93' r='10.01'/%3E%3Ccircle class='cls-2' cx='25.83' cy='26.35' r='10.01'/%3E%3Ccircle class='cls-2' cx='30.41' cy='21.77' r='10.01'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")}.interface-container .interface{display:flex;justify-content:space-between;flex-direction:column;flex-wrap:wrap;border-radius:5px;width:160px;margin-top:5px;background-color:rgba(0,0,0,.8);padding:10px;display:none}.interface.opened{display:flex}.interface>div{display:flex;flex-direction:column;margin:10px 0;justify-content:flex-start;width:100%;max-width:100%}.interface>div:first-child{margin-top:0}.interface>div:last-child{margin-bottom:0}.interface label{color:#fff;height:100%;padding:0 0 5px;text-transform:uppercase;font-family:helvetica;font-size:12px}input[type=range]{-webkit-appearance:none;width:100%;margin:8.55px 0}input[type=range]:focus{outline:none}input[type=range]::-webkit-slider-runnable-track{width:100%;height:9.9px;cursor:pointer;box-shadow:0 0 0 transparent,0 0 0 rgba(13,13,13,0);background:#f14341;border-radius:1.3px;border:0 solid rgba(1,1,1,0)}input[type=range]::-webkit-slider-thumb{box-shadow:0 0 0 #000,0 0 0 #0d0d0d;border:0 solid transparent;height:27px;width:10px;border-radius:4px;background:#fff;cursor:pointer;-webkit-appearance:none;margin-top:-8.55px}input[type=range]:focus::-webkit-slider-runnable-track{background:#f35b59}input[type=range]::-moz-range-track{width:100%;height:9.9px;cursor:pointer;box-shadow:0 0 0 transparent,0 0 0 rgba(13,13,13,0);background:#f14341;border-radius:1.3px;border:0 solid rgba(1,1,1,0)}input[type=range]::-moz-range-thumb{box-shadow:0 0 0 #000,0 0 0 #0d0d0d;border:0 solid transparent;height:27px;width:10px;border-radius:4px;background:#fff;cursor:pointer}input[type=range]::-ms-track{width:100%;height:9.9px;cursor:pointer;background:transparent;border-color:transparent;color:transparent}input[type=range]::-ms-fill-lower{background:#ef2b29}input[type=range]::-ms-fill-lower,input[type=range]::-ms-fill-upper{border:0 solid rgba(1,1,1,0);border-radius:2.6px;box-shadow:0 0 0 transparent,0 0 0 rgba(13,13,13,0)}input[type=range]::-ms-fill-upper{background:#f14341}input[type=range]::-ms-thumb{box-shadow:0 0 0 #000,0 0 0 #0d0d0d;border:0 solid transparent;height:27px;width:10px;border-radius:4px;background:#fff;cursor:pointer;height:9.9px}input[type=range]:focus::-ms-fill-lower{background:#f14341}input[type=range]:focus::-ms-fill-upper{background:#f35b59}";
@@ -91,12 +91,12 @@
       this.randomBtn = this.shadowRoot.querySelector('.randomCircle');
       this.addSettings();
       this.addEventListeners();
-      const download = this.getAttribute('download');
+      const disableDownload = this.getAttribute('disable-download');
 
-      if (download === 'true') {
-        this.saveBtn.style.display = 'inline-block';
-      } else {
+      if (disableDownload === 'true') {
         this.saveBtn.style.display = 'none';
+      } else {
+        this.saveBtn.style.display = 'inline-block';
       }
     }
 
@@ -134,8 +134,6 @@
       }); // toggle fullscreen
 
       this.fullscreenBtn.addEventListener('click', () => {
-        console.log('click', this.fullscreen);
-
         if (this.fullscreen) {
           this.fullscreen = false;
           this.widget.style.zIndex = -100;
@@ -89686,13 +89684,12 @@
   var miniSvgDataUri = svgToTinyDataUri;
 
   class Sketch {
-    constructor(width, height, shadowRoot, canLoop) {
+    constructor(width, height, shadowRoot) {
       this.width = width;
       this.height = height;
       this.shadowRoot = shadowRoot;
       this.svgNodes = [];
       this.fullscreen = false;
-      this.canLoop = canLoop;
       this.background = 'rgba(0, 0, 0, 1)';
       this.dx = null;
       this.xgap = 50; // todo
@@ -89735,13 +89732,7 @@
 
       this.p.noStroke();
       this.p.fill(RED);
-
-      if (!this.canLoop) {
-        this.p.noLoop();
-      } else {
-        this.p.frameRate(30);
-      }
-
+      this.p.frameRate(30);
       this.setOrtho(); // this.p.setAttributes('antialias', true)
       // this.p.smooth()
       // this.p.debugMode()
@@ -89774,16 +89765,17 @@
       this.moveSvg();
     }
 
-    updateSvgNodes(nodes) {
+    updateSvgNodes(nodes, groups) {
       this.svgNodes = nodes;
+      this.svgGroups = groups;
     }
 
     moveSvg() {
-      const y = Math.sin(this.theta) * this.ampl; // todo
-
+      const y = [Math.sin(this.theta) * this.ampl, Math.sin(this.theta + this.dx * 5) * this.ampl, Math.sin(this.theta + this.dx * 10) * this.ampl];
       this.svgNodes.forEach(node => {
         const pos = parseInt(node.getAttribute('pos'));
-        node.setAttribute('cy', pos + y);
+        const i = parseInt(node.getAttribute('index'));
+        node.setAttribute('cy', pos + y[i]);
       });
     }
 
@@ -89804,17 +89796,12 @@
     }
 
     stop() {
-      if (this.canLoop) {
-        this.p.noLoop();
-      }
-
+      this.p.noLoop();
       this.save();
     }
 
     play() {
-      if (this.canLoop) {
-        this.p.loop();
-      }
+      this.p.loop();
     }
 
     setFullscreen(val) {
@@ -89960,10 +89947,7 @@
 
   <div class="widget-container">
     <div class="loader"></div>
-    <audio id="audio" controls autoplay loop style="display: none">
-      <source src="src/assets/music.mp3" type="audio/mpeg">
-      <p>Your browser doesn't support HTML5 audio. Here is
-    </audio>
+    <audio id="audio" preload autoplay loop style="display: none"></audio>
   </div>
   <svg id="circle" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"></svg>
 `;
@@ -89976,6 +89960,7 @@
         mode: 'open'
       });
       this.shadowRoot.appendChild(template$1.content.cloneNode(true));
+      this.musicPlay = this.musicPlay.bind(this);
       this.sketch = null;
       this.svg = null;
       this.circles = null;
@@ -89986,56 +89971,81 @@
     connectedCallback() {
       console.log('Interactive content: brigittaforrai.com');
       canvasToBlob.init();
-      const canLoop = this.getAttribute('animation') === 'true';
       this.svg = this.shadowRoot.querySelector('svg#circle');
-      this.sketch = new Sketch(this.width, this.height, this.shadowRoot, canLoop);
+      this.sketch = new Sketch(this.width, this.height, this.shadowRoot);
+      const circleAttr = this.getAttribute('circles');
+      const num = circleAttr ? parseInt(circleAttr) : 1;
+      this.circleNum = num > 0 && num <= 3 ? num : 1;
       this.updateSvg();
-      new p5$1(this.sketch.setupP5); // todo preload ?
-
-      const musicPlay = () => {
-        this.audio = this.shadowRoot.getElementById('audio');
-        this.audio.play();
-        document.removeEventListener('click', musicPlay);
-        document.removeEventListener('scroll', musicPlay);
-      };
-
-      document.addEventListener('click', musicPlay);
-      document.addEventListener('scroll', musicPlay);
+      new p5$1(this.sketch.setupP5);
+      this.handleAudio();
     }
 
     static get observedAttributes() {
       return inputAttrs.concat(attrs);
     }
 
-    updateSvg() {
-      const randomR = getRandom(20, 100);
-      const randomY = getRandom(2 * randomR, this.height - 4 * randomR); // todo
+    handleAudio() {
+      this.audio = this.shadowRoot.getElementById('audio');
+      const musicUrl = this.getAttribute('music-url');
 
-      const randomX = getRandom(2 * randomR, this.width - 4 * randomR);
-      const distance = randomR / 5;
-      const number = getRandom(3, 23);
-      const directions = [-1, 0, 1];
-      const index = getRandom(0, 2);
-      const direction = directions[index];
+      if (musicUrl) {
+        const source = document.createElement('source');
+        source.setAttribute('src', musicUrl);
+        source.setAttribute('type', 'audio/mpeg');
+        this.audio.appendChild(source);
+        document.addEventListener('click', this.musicPlay);
+        document.addEventListener('scroll', this.musicPlay);
+      }
+    } // todo
+
+
+    musicPlay() {
+      document.removeEventListener('click', this.musicPlay);
+      document.removeEventListener('scroll', this.musicPlay);
+      this.audio.play();
+    }
+
+    updateSvg() {
       this.svg.innerHTML = '';
 
-      for (let i = 0; i < number; i++) {
-        const y = randomY + i * distance / 2 * direction;
-        const circle = createElement('circle', {
-          cx: randomX + i * distance,
-          cy: y,
-          r: randomR,
-          fill: RED,
-          stroke: 'white',
-          strokeWidth: 2,
-          name: 'circle',
-          pos: y
+      for (let c = 0; c < this.circleNum; c++) {
+        const randomR = getRandom(15, 80);
+        const randomY = getRandom(randomR, this.height - 2 * randomR); // todo
+
+        const randomX = getRandom(randomR, this.width - 2 * randomR);
+        const distance = randomR / 5;
+        const number = getRandom(3, 16);
+        const directions = [-1, 0, 1];
+        const index = getRandom(0, 2);
+        const direction = directions[index];
+        const group = createElement('g', {
+          name: 'group',
+          index: c
         });
-        this.svg.appendChild(circle);
+
+        for (let i = 0; i < number; i++) {
+          const y = randomY + i * distance / 2 * direction;
+          const circle = createElement('circle', {
+            cx: randomX + i * distance,
+            cy: y,
+            r: randomR,
+            fill: RED,
+            stroke: 'white',
+            strokeWidth: 2,
+            name: 'circle',
+            pos: y,
+            index: c
+          });
+          group.appendChild(circle);
+        }
+
+        this.svg.appendChild(group);
       }
 
       const circles = this.shadowRoot.querySelectorAll([name = "circle"]);
-      this.sketch.updateSvgNodes(circles);
+      const groups = this.shadowRoot.querySelectorAll([name = "group"]);
+      this.sketch.updateSvgNodes(circles, groups);
     }
 
     attributeChangedCallback(attrName, oldval, newVal) {

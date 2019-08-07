@@ -56,11 +56,11 @@ export default class DesignHetInterface extends HTMLElement {
     this.addSettings()
     this.addEventListeners()
 
-    const download = this.getAttribute('download')
-    if (download === 'true') {
-      this.saveBtn.style.display = 'inline-block'
-    } else {
+    const disableDownload = this.getAttribute('disable-download')
+    if (disableDownload === 'true') {
       this.saveBtn.style.display = 'none'
+    } else {
+      this.saveBtn.style.display = 'inline-block'
     }
   }
 
@@ -101,7 +101,6 @@ export default class DesignHetInterface extends HTMLElement {
 
     // toggle fullscreen
     this.fullscreenBtn.addEventListener('click', () => {
-      console.log('click', this.fullscreen);
       if (this.fullscreen) {
         this.fullscreen = false
         this.widget.style.zIndex = -100

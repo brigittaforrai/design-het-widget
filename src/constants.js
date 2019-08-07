@@ -1,14 +1,14 @@
-const RED = '#ff2836'
+const RED = '#f9423a'
 
 const settingNames = {
-  xgap: 'x-gap',
-  zgap: 'z-gap',
+  xgap: 'x táv',
+  zgap: 'y táv',
   theta: 'theta',
-  nodesize: 'node size',
-  spacing: 'spacing',
-  tempo: 'tempo',
-  ampl: 'amplitudo',
-  period: 'period'
+  nodesize: 'méret',
+  spacing: 'hullámhossz',
+  tempo: 'tempó',
+  ampl: 'amplitúdó',
+  period: 'periódus'
 }
 
 export {

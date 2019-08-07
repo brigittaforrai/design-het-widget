@@ -4,14 +4,13 @@ import {getRandom} from './helpers.js'
 import {RED} from './constants.js'
 
 export default class Sketch {
-  constructor (width, height, shadowRoot, canLoop) {
+  constructor (width, height, shadowRoot) {
     this.width = width
     this.height = height
     this.shadowRoot = shadowRoot
 
     this.svgNodes = []
     this.fullscreen = false
-    this.canLoop = canLoop
     this.background ='rgba(0, 0, 0, 1)'
 
     this.dx = null
@@ -46,11 +45,7 @@ export default class Sketch {
     this.p.noStroke()
     this.p.fill(RED)
 
-    if (!this.canLoop) {
-      this.p.noLoop()
-    } else {
-      this.p.frameRate(30)
-    }
+    this.p.frameRate(30)
 
     this.setOrtho()
     // this.p.setAttributes('antialias', true)
@@ -87,15 +82,21 @@ export default class Sketch {
     this.moveSvg()
   }
 
-  updateSvgNodes(nodes) {
+  updateSvgNodes(nodes, groups) {
     this.svgNodes = nodes
+    this.svgGroups = groups
   }
 
   moveSvg() {
-    const y = Math.sin(this.theta) * this.ampl // todo
+    const y = [
+      Math.sin(this.theta) * this.ampl,
+      Math.sin(this.theta + this.dx * 5) * this.ampl,
+      Math.sin(this.theta + this.dx * 10) * this.ampl
+    ]
     this.svgNodes.forEach((node) => {
       const pos = parseInt(node.getAttribute('pos'))
-      node.setAttribute('cy', pos + y)
+      const i = parseInt(node.getAttribute('index'))
+      node.setAttribute('cy', pos + y[i])
     })
   }
 
@@ -118,16 +119,12 @@ export default class Sketch {
   }
 
   stop() {
-    if (this.canLoop) {
-      this.p.noLoop()
-    }
+    this.p.noLoop()
     this.save()
   }
 
   play() {
-    if (this.canLoop) {
-      this.p.loop()
-    }
+    this.p.loop()
   }
 
   setFullscreen (val) {

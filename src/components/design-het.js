@@ -13,10 +13,7 @@ template.innerHTML = `
 
   <div class="widget-container">
     <div class="loader"></div>
-    <audio id="audio" controls autoplay loop style="display: none">
-      <source src="src/assets/music.mp3" type="audio/mpeg">
-      <p>Your browser doesn't support HTML5 audio. Here is
-    </audio>
+    <audio id="audio" preload autoplay loop style="display: none"></audio>
   </div>
   <svg id="circle" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"></svg>
 `
@@ -29,6 +26,7 @@ export default class DesignHet extends HTMLElement {
     super()
     this.attachShadow({mode: 'open'})
     this.shadowRoot.appendChild(template.content.cloneNode(true))
+    this.musicPlay = this.musicPlay.bind(this)
 
     this.sketch = null
     this.svg = null
@@ -41,56 +39,82 @@ export default class DesignHet extends HTMLElement {
     console.log('Interactive content: brigittaforrai.com')
 
     toBlob.init()
-    const canLoop = (this.getAttribute('animation') === 'true')
     this.svg = this.shadowRoot.querySelector('svg#circle')
-    this.sketch = new Sketch(this.width, this.height, this.shadowRoot, canLoop)
-    this.updateSvg()
-    new p5(this.sketch.setupP5);
+    this.sketch = new Sketch(this.width, this.height, this.shadowRoot)
 
-    // todo preload ?
-    const musicPlay = () => {
-      this.audio = this.shadowRoot.getElementById('audio')
-      this.audio.play()
-      document.removeEventListener('click', musicPlay)
-      document.removeEventListener('scroll', musicPlay)
-    }
-    document.addEventListener('click', musicPlay)
-    document.addEventListener('scroll', musicPlay)
+    const circleAttr = this.getAttribute('circles')
+    const num = circleAttr ? parseInt(circleAttr) : 1
+    this.circleNum = ((num > 0) && (num <=3)) ? num : 1
+
+    this.updateSvg()
+    new p5(this.sketch.setupP5)
+
+    this.handleAudio()
   }
 
   static get observedAttributes() {
     return inputAttrs.concat(attrs)
   }
 
+  handleAudio () {
+    this.audio = this.shadowRoot.getElementById('audio')
+    const musicUrl = this.getAttribute('music-url')
+
+    if (musicUrl) {
+      const source = document.createElement('source')
+      source.setAttribute('src', musicUrl)
+      source.setAttribute('type', 'audio/mpeg')
+      this.audio.appendChild(source)
+      document.addEventListener('click', this.musicPlay)
+      document.addEventListener('scroll', this.musicPlay)
+    }
+  }
+
+  // todo
+  musicPlay () {
+    document.removeEventListener('click', this.musicPlay)
+    document.removeEventListener('scroll', this.musicPlay)
+    this.audio.play()
+  }
+
   updateSvg() {
-    const randomR = getRandom(20, 100)
-    const randomY = getRandom(2 * randomR, this.height - 4 * randomR) // todo
-    const randomX = getRandom(2 * randomR, this.width - 4 * randomR)
-    const distance = randomR / 5
-
-    const number = getRandom(3, 23)
-    const directions = [-1, 0, 1]
-    const index = getRandom(0, 2)
-    const direction = directions[index]
-
     this.svg.innerHTML = ''
+    for (let c = 0; c < this.circleNum; c++) {
+      const randomR = getRandom(15, 80)
+      const randomY = getRandom(randomR, this.height - (2 * randomR)) // todo
+      const randomX = getRandom(randomR, this.width - (2 * randomR))
+      const distance = randomR / 5
 
-    for (let i = 0; i < number; i++) {
-      const y = randomY + ((i * distance / 2) * direction)
-      const circle = createElement('circle', {
-        cx: randomX + i * distance,
-        cy: y,
-        r: randomR,
-        fill: RED,
-        stroke: 'white',
-        strokeWidth: 2,
-        name: 'circle',
-        pos: y
+      const number = getRandom(3, 16)
+      const directions = [-1, 0, 1]
+      const index = getRandom(0, 2)
+      const direction = directions[index]
+
+      const group = createElement('g', {
+        name: 'group',
+        index: c
       })
-      this.svg.appendChild(circle)
+
+      for (let i = 0; i < number; i++) {
+        const y = randomY + ((i * distance / 2) * direction)
+        const circle = createElement('circle', {
+          cx: randomX + i * distance,
+          cy: y,
+          r: randomR,
+          fill: RED,
+          stroke: 'white',
+          strokeWidth: 2,
+          name: 'circle',
+          pos: y,
+          index: c
+        })
+        group.appendChild(circle)
+      }
+      this.svg.appendChild(group)
     }
     const circles = this.shadowRoot.querySelectorAll([name="circle"])
-    this.sketch.updateSvgNodes(circles)
+    const groups = this.shadowRoot.querySelectorAll([name="group"])
+    this.sketch.updateSvgNodes(circles, groups)
   }
 
   attributeChangedCallback (attrName, oldval, newVal) {
