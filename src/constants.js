@@ -1,8 +1,8 @@
 const RED = '#f9423a'
 
 const settingNames = {
-  xgap: 'x táv',
-  zgap: 'y táv',
+  xgap: 'x-táv',
+  zgap: 'y-táv',
   theta: 'theta',
   nodesize: 'méret',
   spacing: 'hullámhossz',
