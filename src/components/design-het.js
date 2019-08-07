@@ -72,6 +72,7 @@ export default class DesignHet extends HTMLElement {
 
   // todo
   musicPlay () {
+    console.log(this, 'this musicplay');
     document.removeEventListener('click', this.musicPlay)
     document.removeEventListener('scroll', this.musicPlay)
     this.audio.play()
@@ -79,9 +80,10 @@ export default class DesignHet extends HTMLElement {
 
   updateSvg() {
     this.svg.innerHTML = ''
+    console.log(this.circleNum, 'circles')
     for (let c = 0; c < this.circleNum; c++) {
       const randomR = getRandom(15, 80)
-      const randomY = getRandom(randomR, this.height - (2 * randomR)) // todo
+      const randomY = getRandom(randomR, this.height - (2 * randomR))
       const randomX = getRandom(randomR, this.width - (2 * randomR))
       const distance = randomR / 5
 
