@@ -3,13 +3,16 @@
   "version": "2.0.1",
   "description": "",
   "main": "dist/design-het-widget.js",
-  "author": "",
+  "module": "dist/design-het-widget.js",
+  "author": "brigitta forrai",
   "engines": {
     "node": ">= 6"
   },
   "scripts": {
-    "build": "rollup -c",
-    "storybook": "start-storybook -p 6006"
+    "storybook": "start-storybook -p 6006",
+    "build": "babel src -d lib",
+    "lint": "eslint \"src/**/*.js\"",
+    "bundle": "npm run build && rollup -c"
   },
   "repository": {
     "type": "git",
@@ -21,11 +24,15 @@
   },
   "homepage": "https://github.com/brigittaforrai/designhet#readme",
   "devDependencies": {
+    "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
     "@babel/plugin-external-helpers": "^7.2.0",
-    "@babel/preset-env": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@babel/preset-env": "^7.5.5",
     "@storybook/html": "^5.1.10",
     "babel-loader": "^8.0.6",
+    "lit-element": "^2.2.1",
     "rollup": "^1.18.0",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.0.1",
