@@ -28,8 +28,8 @@
 
   const RED = '#f9423a';
   const settingNames = {
-    xgap: 'x-táv',
-    zgap: 'y-táv',
+    xgap: 'pontsűrűség-x',
+    zgap: 'pontsűrűség-y',
     theta: 'theta',
     nodesize: 'méret',
     spacing: 'hullámhossz',
@@ -89805,7 +89805,7 @@
     }
 
     setFullscreen(val) {
-      this.fullscreen = val === 'true';
+      this.fullscreen = val;
     }
 
     save() {
@@ -90057,7 +90057,9 @@
       }
 
       if (attrName === 'fullscreen') {
-        this.sketch.setFullscreen(newVal);
+        const bool = newVal === 'true';
+        this.sketch.setFullscreen(bool);
+        this.style.cursor = bool ? 'move' : 'default';
       }
 
       if (attrName === 'mute' && this.audio) {

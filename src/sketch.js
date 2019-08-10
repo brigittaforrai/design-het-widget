@@ -128,7 +128,7 @@ export default class Sketch {
   }
 
   setFullscreen (val) {
-    this.fullscreen = val === 'true'
+    this.fullscreen = val
   }
 
   save() {

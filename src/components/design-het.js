@@ -126,7 +126,9 @@ export default class DesignHet extends HTMLElement {
     }
 
     if (attrName === 'fullscreen') {
-      this.sketch.setFullscreen(newVal)
+      const bool = newVal === 'true'
+      this.sketch.setFullscreen(bool)
+      this.style.cursor = bool ? 'move' : 'default'
     }
 
     if ((attrName === 'mute') && this.audio) {
