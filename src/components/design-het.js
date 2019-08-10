@@ -79,16 +79,16 @@ export default class DesignHet extends HTMLElement {
 
   updateSvg() {
     this.svg.innerHTML = ''
+    const directions = [-1, 0, 1]
+    const index = getRandom(0, 2)
+    const direction = directions[index]
+
     for (let c = 0; c < this.circleNum; c++) {
       const randomR = getRandom(15, 80)
-      const randomY = getRandom(randomR, this.height - (2 * randomR))
-      const randomX = getRandom(randomR, this.width - (2 * randomR))
+      const randomY = getRandom(randomR * 2, this.height - (4 * randomR))
+      const randomX = getRandom(randomR * 2, this.width - (4 * randomR))
       const distance = randomR / 5
-
       const number = getRandom(3, 16)
-      const directions = [-1, 0, 1]
-      const index = getRandom(0, 2)
-      const direction = directions[index]
 
       const group = createElement('g', {
         name: 'group',
