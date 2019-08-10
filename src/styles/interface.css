@@ -36,10 +36,10 @@
   background-image: svg-load('./../assets/icons/download_e.svg');
 }
 .interface-container button.fullscreen {
-  background-image: svg-load('./../assets/icons/play.svg');
+  background-image: svg-load('./../assets/icons/rotate_e.svg');
 }
 .interface-container button.fullscreen.stop {
-  background-image: svg-load('./../assets/icons/stop.svg');
+  background-image: svg-load('./../assets/icons/rotate.svg');
 }
 .interface-container button.randomCircle {
   background-image: svg-load('./../assets/icons/random_e.svg');
