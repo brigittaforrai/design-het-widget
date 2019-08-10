@@ -35,7 +35,6 @@ export default class Sketch {
     this.p = p
     p.setup = () => { this.setup() }
     p.draw = () => { this.draw(randomRotate) }
-    p.windowResized = () => { this.windowResized() }
   }
 
   setup () {
@@ -96,7 +95,9 @@ export default class Sketch {
     this.svgNodes.forEach((node) => {
       const pos = parseInt(node.getAttribute('pos'))
       const i = parseInt(node.getAttribute('index'))
-      node.setAttribute('cy', pos + y[i])
+      if (typeof pos === 'number' && typeof i === 'number' ) {
+        node.setAttribute('cy', pos + y[i])
+      }
     })
   }
 
@@ -211,9 +212,9 @@ export default class Sketch {
     this.yNodes = Math.ceil(this.height / this.zgap) + 2
   }
 
-  windowResized() {
-    this.width = this.p.windowWidth
-    this.height = this.p.windowHeight
+  windowResized(width, height) {
+    this.width = width
+    this.height = height
     this.p.resizeCanvas(this.width, this.height)
     this.setOrtho()
     this.calcNodeNum()

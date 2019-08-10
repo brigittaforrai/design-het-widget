@@ -42,6 +42,12 @@ export default class DesignHet extends HTMLElement {
     this.svg = this.shadowRoot.querySelector('svg#circle')
     this.sketch = new Sketch(this.width, this.height, this.shadowRoot)
 
+    window.addEventListener('resize', () => {
+      this.width = window.innerWidth
+      this.height = window.innerHeight
+      this.sketch.windowResized(this.width, this.height)
+    })
+
     const circleAttr = this.getAttribute('circles')
     const num = circleAttr ? parseInt(circleAttr) : 1
     this.circleNum = ((num > 0) && (num <=3)) ? num : 1

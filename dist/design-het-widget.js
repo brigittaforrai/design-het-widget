@@ -89719,10 +89719,6 @@
       p.draw = () => {
         this.draw(randomRotate);
       };
-
-      p.windowResized = () => {
-        this.windowResized();
-      };
     }
 
     setup() {
@@ -89775,7 +89771,10 @@
       this.svgNodes.forEach(node => {
         const pos = parseInt(node.getAttribute('pos'));
         const i = parseInt(node.getAttribute('index'));
-        node.setAttribute('cy', pos + y[i]);
+
+        if (typeof pos === 'number' && typeof i === 'number') {
+          node.setAttribute('cy', pos + y[i]);
+        }
       });
     }
 
@@ -89883,9 +89882,9 @@
       this.yNodes = Math.ceil(this.height / this.zgap) + 2;
     }
 
-    windowResized() {
-      this.width = this.p.windowWidth;
-      this.height = this.p.windowHeight;
+    windowResized(width, height) {
+      this.width = width;
+      this.height = height;
       this.p.resizeCanvas(this.width, this.height);
       this.setOrtho();
       this.calcNodeNum();
@@ -89973,6 +89972,11 @@
       canvasToBlob.init();
       this.svg = this.shadowRoot.querySelector('svg#circle');
       this.sketch = new Sketch(this.width, this.height, this.shadowRoot);
+      window.addEventListener('resize', () => {
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.sketch.windowResized(this.width, this.height);
+      });
       const circleAttr = this.getAttribute('circles');
       const num = circleAttr ? parseInt(circleAttr) : 1;
       this.circleNum = num > 0 && num <= 3 ? num : 1;
