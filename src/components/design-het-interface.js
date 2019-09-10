@@ -1,4 +1,4 @@
-import {gridSettings} from './../settings.js'
+import {gridSettings, defaultSettings} from './../settings.js'
 import {getRandom} from './../helpers.js'
 import {settingNames} from './../constants'
 import style from './../styles/interface.css'
@@ -33,14 +33,15 @@ export default class DesignHetInterface extends HTMLElement {
     Object.keys(gridSettings).forEach((i) => {
       const item = gridSettings[i]
       const div = document.createElement('div')
-      const random = getRandom(item[3], item[4] / 3, item[2])
+      let value = defaultSettings[i] === undefined ? getRandom(item[3], item[4] / 3, item[2]) : defaultSettings[i]
+
       const setting = `
-        <label for="${i}">${settingNames[i]}: ${random}</label>
-        <input step="${item[2]}" min="${item[0]}" max="${item[1]}" type="range" name="${i}" value="${random}"></input>
+        <label for="${i}">${settingNames[i]}: ${value}</label>
+        <input step="${item[2]}" min="${item[0]}" max="${item[1]}" type="range" name="${i}" value="${value}"></input>
       `
       div.innerHTML = setting
       interf.appendChild(div)
-      this.widget.setAttribute(i, random)
+      this.widget.setAttribute(i, value)
     })
   }
 

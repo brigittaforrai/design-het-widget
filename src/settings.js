@@ -10,14 +10,14 @@ const gridSettings = {
 }
 
 const defaultSettings = {
-  xgap: 50,
-  zgap: 50,
-  theta: 0.00,
-  nodesize: 6,
-  spacing: 3,
-  tempo: 0.05,
-  ampl: 20,
-  period: 500
+  xgap: 100,
+  zgap: 100,
+  // theta: 0.00,
+  // nodesize: 6,
+  // spacing: 3,
+  tempo: 0
+  // ampl: 20,
+  // period: 500
 }
 
 export {

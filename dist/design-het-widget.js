@@ -14,6 +14,16 @@
     ampl: [0, 200, 1, 50, 200],
     period: [1, 5000, 1, 1, 1000]
   };
+  const defaultSettings = {
+    xgap: 100,
+    zgap: 100,
+    // theta: 0.00,
+    // nodesize: 6,
+    // spacing: 3,
+    tempo: 0 // ampl: 20,
+    // period: 500
+
+  };
 
   function getRandom(min, max, step) {
     const random = Math.random() * (max - min) + min;
@@ -70,14 +80,14 @@
       Object.keys(gridSettings).forEach(i => {
         const item = gridSettings[i];
         const div = document.createElement('div');
-        const random = getRandom(item[3], item[4] / 3, item[2]);
+        let value = defaultSettings[i] === undefined ? getRandom(item[3], item[4] / 3, item[2]) : defaultSettings[i];
         const setting = `
-        <label for="${i}">${settingNames[i]}: ${random}</label>
-        <input step="${item[2]}" min="${item[0]}" max="${item[1]}" type="range" name="${i}" value="${random}"></input>
+        <label for="${i}">${settingNames[i]}: ${value}</label>
+        <input step="${item[2]}" min="${item[0]}" max="${item[1]}" type="range" name="${i}" value="${value}"></input>
       `;
         div.innerHTML = setting;
         interf.appendChild(div);
-        this.widget.setAttribute(i, random);
+        this.widget.setAttribute(i, value);
       });
     }
 
