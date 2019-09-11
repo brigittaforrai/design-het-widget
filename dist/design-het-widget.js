@@ -90022,8 +90022,8 @@
 
     updateSvg() {
       this.svg.innerHTML = '';
-      const directions = [-1, 0, 1];
-      const index = getRandom(0, 2);
+      const directions = [-1, 1];
+      const index = getRandom(0, 1);
       const direction = directions[index];
 
       for (let c = 0; c < this.circleNum; c++) {
