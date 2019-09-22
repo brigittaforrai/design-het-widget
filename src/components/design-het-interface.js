@@ -36,7 +36,7 @@ export default class DesignHetInterface extends HTMLElement {
       let value = defaultSettings[i] === undefined ? getRandom(item[3], item[4] / 3, item[2]) : defaultSettings[i]
 
       const setting = `
-        <label for="${i}">${settingNames[i]}: ${value}</label>
+        <label for="${i}">${settingNames[i]}</label>
         <input step="${item[2]}" min="${item[0]}" max="${item[1]}" type="range" name="${i}" value="${value}"></input>
       `
       div.innerHTML = setting
