@@ -89791,7 +89791,7 @@
 
       if (this.installation) {
         this.p.rotateX(this.x);
-        this.p.rotateY(this.y);
+        this.p.rotateZ(this.y);
       }
 
       this.drawGrid();
@@ -90130,7 +90130,6 @@
       if (attrName === 'rotatex') {
         if (this.sketch) {
           let val = parseFloat(newVal);
-          console.log(val, "vaaaaaaal x");
           this.sketch.setinstallationRotation({
             x: val
           });
@@ -90139,7 +90138,7 @@
 
       if (attrName === 'rotatey') {
         if (this.sketch) {
-          let val = parseInt(newVal);
+          let val = parseFloat(newVal);
           this.sketch.setinstallationRotation({
             y: val
           });
