@@ -19,7 +19,7 @@ template.innerHTML = `
 `
 
 const inputAttrs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
-const attrs = ['saveas', 'stop', 'fullscreen', 'mute']
+const attrs = ['saveas', 'stop', 'fullscreen', 'mute', 'rotatex', 'rotatey']
 
 export default class DesignHet extends HTMLElement {
   constructor() {
@@ -33,6 +33,8 @@ export default class DesignHet extends HTMLElement {
     this.circles = null
     this.width = window.innerWidth
     this.height = window.innerHeight
+    this.color = RED
+    this.stroke = '#fff'
   }
 
   connectedCallback () {
@@ -51,6 +53,13 @@ export default class DesignHet extends HTMLElement {
     const circleAttr = this.getAttribute('circles')
     const num = circleAttr ? parseInt(circleAttr) : 1
     this.circleNum = ((num > 0) && (num <=3)) ? num : 1
+
+    const installation = this.getAttribute('installation')
+    if (installation === "true") {
+      this.sketch.setInstallation()
+      this.color = "#fff"
+      this.stroke = "#000"
+    }
 
     this.updateSvg()
     new p5(this.sketch.setupP5)
@@ -107,8 +116,8 @@ export default class DesignHet extends HTMLElement {
           cx: randomX + i * distance,
           cy: y,
           r: randomR,
-          fill: RED,
-          stroke: 'white',
+          fill: this.color,
+          stroke: this.stroke,
           strokeWidth: 2,
           name: 'circle',
           pos: y,
@@ -127,8 +136,15 @@ export default class DesignHet extends HTMLElement {
     if (attrName === 'saveas' && newVal) {
       this.sketch.save(newVal)
     }
+
     if (attrName === 'stop' && newVal) {
       this.sketch.stop()
+    }
+
+    if (attrName === 'fullscreen') {
+      const bool = newVal === 'true'
+      this.sketch.setFullscreen(bool)
+      this.style.cursor = bool ? 'move' : 'default'
     }
 
     if (attrName === 'fullscreen') {
@@ -145,7 +161,22 @@ export default class DesignHet extends HTMLElement {
       }
     }
 
+    if (attrName === 'rotatex') {
+      if (this.sketch) {
+        let val = parseFloat(newVal)
+        this.sketch.setinstallationRotation({x: val})
+      }
+    }
+    if (attrName === 'rotatey') {
+      if (this.sketch) {
+        let val = parseFloat(newVal)
+        this.sketch.setinstallationRotation({y: val})
+      }
+
+    }
+
     if (inputAttrs.indexOf(attrName) >= 0) {
+      console.log(this.sketch, 3);
       this.sketch.update(attrName, newVal)
     }
   }

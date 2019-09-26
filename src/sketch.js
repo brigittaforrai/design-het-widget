@@ -12,19 +12,24 @@ export default class Sketch {
     this.svgNodes = []
     this.fullscreen = false
     this.background ='rgba(0, 0, 0, 1)'
+    this.color = RED
+
+    this.installation = false
+    this.x = 0
+    this.y = 0
 
     this.dx = null
 
-    this.xgap = 50 // todo
-    this.zgap = 50 // todo
-    this.theta = null
-    this.nodesize = null
-    this.spacing = null
-    this.tempo = null
-    this.ampl = null
-    this.period = null
-    this.xNodes = 0
-    this.yNodes = 0
+    this.xgap = 100 // todo
+    this.zgap = 100 // todo
+    this.theta = 0.00
+    this.nodesize = 10
+    this.spacing = 3
+    this.tempo = 0.1
+    this.ampl = 20
+    this.period = 500
+    this.xNodes = Math.ceil(this.width / this.xgap) + 2
+    this.yNodes = Math.ceil(this.height / this.zgap) + 2
 
     this.setupP5 = this.setupP5.bind(this)
     this.loader = this.shadowRoot.querySelector('.loader')
@@ -37,12 +42,28 @@ export default class Sketch {
     p.draw = () => { this.draw(randomRotate) }
   }
 
+  setInstallation() {
+    this.installation = true
+    this.color = "#fff"
+  }
+
+  setinstallationRotation(values) {
+    if (values.x) {
+      let degX = (360 * values.x) / 100
+      this.x = degX * (Math.PI/180)
+    }
+    if (values.y) {
+      let degY = (360 * values.y) / 100
+      this.y = degY * (Math.PI/180)
+    }
+  }
+
   setup () {
     this.p.noCanvas()
     this.p.createCanvas(this.width, this.height, this.p.WEBGL)
     this.p.pixelDensity(4) // todo
     this.p.noStroke()
-    this.p.fill(RED)
+    this.p.fill(this.color)
 
     this.p.frameRate(30)
 
@@ -62,7 +83,7 @@ export default class Sketch {
     this.p.clear()
     this.p.background(this.background)
 
-    if (this.fullscreen) {
+    if (this.fullscreen && !this.installation) {
       this.p.orbitControl()
     }
 
@@ -76,6 +97,11 @@ export default class Sketch {
     this.p.rotateX(this.p.HALF_PI)
     this.p.rotateX(randomRotate)
     this.p.rotateZ(randomRotate)
+
+    if (this.installation) {
+      this.p.rotateX(this.x)
+      this.p.rotateZ(this.y)
+    }
 
     this.drawGrid()
     this.moveSvg()

@@ -89701,19 +89701,23 @@
       this.svgNodes = [];
       this.fullscreen = false;
       this.background = 'rgba(0, 0, 0, 1)';
+      this.color = RED;
+      this.installation = false;
+      this.x = 0;
+      this.y = 0;
       this.dx = null;
-      this.xgap = 50; // todo
+      this.xgap = 100; // todo
 
-      this.zgap = 50; // todo
+      this.zgap = 100; // todo
 
-      this.theta = null;
-      this.nodesize = null;
-      this.spacing = null;
-      this.tempo = null;
-      this.ampl = null;
-      this.period = null;
-      this.xNodes = 0;
-      this.yNodes = 0;
+      this.theta = 0.00;
+      this.nodesize = 10;
+      this.spacing = 3;
+      this.tempo = 0.1;
+      this.ampl = 20;
+      this.period = 500;
+      this.xNodes = Math.ceil(this.width / this.xgap) + 2;
+      this.yNodes = Math.ceil(this.height / this.zgap) + 2;
       this.setupP5 = this.setupP5.bind(this);
       this.loader = this.shadowRoot.querySelector('.loader');
     }
@@ -89731,13 +89735,30 @@
       };
     }
 
+    setInstallation() {
+      this.installation = true;
+      this.color = "#fff";
+    }
+
+    setinstallationRotation(values) {
+      if (values.x) {
+        let degX = 360 * values.x / 100;
+        this.x = degX * (Math.PI / 180);
+      }
+
+      if (values.y) {
+        let degY = 360 * values.y / 100;
+        this.y = degY * (Math.PI / 180);
+      }
+    }
+
     setup() {
       this.p.noCanvas();
       this.p.createCanvas(this.width, this.height, this.p.WEBGL);
       this.p.pixelDensity(4); // todo
 
       this.p.noStroke();
-      this.p.fill(RED);
+      this.p.fill(this.color);
       this.p.frameRate(30);
       this.setOrtho(); // this.p.setAttributes('antialias', true)
       // this.p.smooth()
@@ -89754,7 +89775,7 @@
       this.p.clear();
       this.p.background(this.background);
 
-      if (this.fullscreen) {
+      if (this.fullscreen && !this.installation) {
         this.p.orbitControl();
       }
 
@@ -89767,6 +89788,12 @@
       this.p.rotateX(this.p.HALF_PI);
       this.p.rotateX(randomRotate);
       this.p.rotateZ(randomRotate);
+
+      if (this.installation) {
+        this.p.rotateX(this.x);
+        this.p.rotateY(this.y);
+      }
+
       this.drawGrid();
       this.moveSvg();
     }
@@ -89961,7 +89988,7 @@
   <svg id="circle" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"></svg>
 `;
   const inputAttrs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period'];
-  const attrs = ['saveas', 'stop', 'fullscreen', 'mute'];
+  const attrs = ['saveas', 'stop', 'fullscreen', 'mute', 'rotatex', 'rotatey'];
   class DesignHet extends HTMLElement {
     constructor() {
       super();
@@ -89975,6 +90002,8 @@
       this.circles = null;
       this.width = window.innerWidth;
       this.height = window.innerHeight;
+      this.color = RED;
+      this.stroke = '#fff';
     }
 
     connectedCallback() {
@@ -89990,6 +90019,14 @@
       const circleAttr = this.getAttribute('circles');
       const num = circleAttr ? parseInt(circleAttr) : 1;
       this.circleNum = num > 0 && num <= 3 ? num : 1;
+      const installation = this.getAttribute('installation');
+
+      if (installation === "true") {
+        this.sketch.setInstallation();
+        this.color = "#fff";
+        this.stroke = "#000";
+      }
+
       this.updateSvg();
       new p5$1(this.sketch.setupP5);
       this.handleAudio();
@@ -90043,8 +90080,8 @@
             cx: randomX + i * distance,
             cy: y,
             r: randomR,
-            fill: RED,
-            stroke: 'white',
+            fill: this.color,
+            stroke: this.stroke,
             strokeWidth: 2,
             name: 'circle',
             pos: y,
@@ -90076,6 +90113,12 @@
         this.style.cursor = bool ? 'move' : 'default';
       }
 
+      if (attrName === 'fullscreen') {
+        const bool = newVal === 'true';
+        this.sketch.setFullscreen(bool);
+        this.style.cursor = bool ? 'move' : 'default';
+      }
+
       if (attrName === 'mute' && this.audio) {
         if (newVal === 'true') {
           this.audio.pause();
@@ -90084,7 +90127,27 @@
         }
       }
 
+      if (attrName === 'rotatex') {
+        if (this.sketch) {
+          let val = parseFloat(newVal);
+          console.log(val, "vaaaaaaal x");
+          this.sketch.setinstallationRotation({
+            x: val
+          });
+        }
+      }
+
+      if (attrName === 'rotatey') {
+        if (this.sketch) {
+          let val = parseInt(newVal);
+          this.sketch.setinstallationRotation({
+            y: val
+          });
+        }
+      }
+
       if (inputAttrs.indexOf(attrName) >= 0) {
+        console.log(this.sketch, 3);
         this.sketch.update(attrName, newVal);
       }
     }
