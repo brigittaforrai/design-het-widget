@@ -1,6 +1,6 @@
 {
   "name": "design-het-widget",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Generative design for Design Week 2019 - Budapest, Hungary",
   "main": "dist/design-het-widget.js",
   "author": "Brigitta Forrai",

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import FileSaver from 'file-saver'
 import svgToMiniDataURI from 'mini-svg-data-uri'
 import {getRandom} from './helpers.js'
@@ -17,6 +18,7 @@ export default class Sketch {
     this.installation = false
     this.x = 0
     this.y = 0
+    this.z = 0
 
     this.dx = null
 
@@ -48,13 +50,14 @@ export default class Sketch {
   }
 
   setinstallationRotation(values) {
-    if (values.x) {
-      let degX = (360 * values.x) / 100
-      this.x = degX * (Math.PI/180)
+    if (typeof values.x === 'number') {
+      this.x = values.x * ( Math.PI / 180)
     }
-    if (values.y) {
-      let degY = (360 * values.y) / 100
-      this.y = degY * (Math.PI/180)
+    if (typeof values.y === 'number') {
+      this.y = values.y * ( Math.PI / 180)
+    }
+    if (typeof values.z === 'number') {
+      this.z = values.z * ( Math.PI / 180)
     }
   }
 
@@ -93,15 +96,15 @@ export default class Sketch {
     // todo
     const tx = -this.width/2 - (2 * this.xgap)
     const ty = this.height/2 + (2 * this.zgap)
-    this.p.translate(tx, ty, 0)
-    this.p.rotateX(this.p.HALF_PI)
-    this.p.rotateX(randomRotate)
-    this.p.rotateZ(randomRotate)
 
     if (this.installation) {
       this.p.rotateX(this.x)
-      this.p.rotateZ(this.y)
+      this.p.rotateY(this.y)
+      this.p.rotateZ(this.z)
     }
+
+    this.p.translate(tx, ty, 0)
+    this.p.rotateX(this.p.HALF_PI)
 
     this.drawGrid()
     this.moveSvg()
@@ -221,7 +224,7 @@ export default class Sketch {
   }
 
   setOrtho () {
-    this.p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2, this.width * -3, this.width * 3)
+    this.p.ortho(-this.width/2, this.width/2, -this.height/2, this.height/2, this.width * -10, this.width * 10)
   }
 
   update (name, val) {

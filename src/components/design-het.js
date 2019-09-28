@@ -1,3 +1,4 @@
+/* eslint-disable */
 import p5 from 'p5'
 import Sketch from './../sketch.js'
 import toBlob from 'canvas-to-blob'
@@ -19,7 +20,7 @@ template.innerHTML = `
 `
 
 const inputAttrs = ['xgap', 'zgap', 'theta', 'nodesize', 'spacing', 'tempo', 'ampl', 'period']
-const attrs = ['saveas', 'stop', 'fullscreen', 'mute', 'rotatex', 'rotatey']
+const attrs = ['saveas', 'stop', 'fullscreen', 'mute', 'rotatex', 'rotatey', 'rotatez']
 
 export default class DesignHet extends HTMLElement {
   constructor() {
@@ -172,11 +173,15 @@ export default class DesignHet extends HTMLElement {
         let val = parseFloat(newVal)
         this.sketch.setinstallationRotation({y: val})
       }
-
+    }
+    if (attrName === 'rotatez') {
+      if (this.sketch) {
+        let val = parseFloat(newVal)
+        this.sketch.setinstallationRotation({z: val})
+      }
     }
 
     if (inputAttrs.indexOf(attrName) >= 0) {
-      console.log(this.sketch, 3);
       this.sketch.update(attrName, newVal)
     }
   }

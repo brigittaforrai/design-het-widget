@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {gridSettings, defaultSettings} from './../settings.js'
 import {getRandom} from './../helpers.js'
 import {settingNames} from './../constants'
